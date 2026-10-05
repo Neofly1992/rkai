@@ -1,0 +1,82 @@
+{
+  "schema": "rkai.model/v0",
+  "model": {
+    "id": "example/bge",
+    "revision": "illustrative-1",
+    "description": "结构示例；不可下载，不代表硬件支持"
+  },
+  "sources": {
+    "release": {
+      "kind": "https",
+      "base_url": "https://example.invalid/bge/"
+    }
+  },
+  "files": {
+    "weights": {
+      "path": "model.rknn",
+      "size": 1,
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "location": {
+        "source": "release",
+        "path": "model.rknn"
+      }
+    },
+    "tokenizer": {
+      "path": "tokenizer.json",
+      "size": 1,
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "location": {
+        "source": "release",
+        "path": "tokenizer.json"
+      }
+    },
+    "adapter_config": {
+      "path": "adapter.json",
+      "size": 1,
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "location": {
+        "source": "release",
+        "path": "adapter.json"
+      }
+    }
+  },
+  "plans": [
+    {
+      "id": "rk3588-npu",
+      "target": {
+        "os": "linux",
+        "arch": "aarch64",
+        "accelerator": "rockchip-npu",
+        "soc": "rk3588"
+      },
+      "capabilities": [
+        {
+          "id": "embedding",
+          "version": 1
+        }
+      ],
+      "default_capability": "embedding",
+      "adapter": {
+        "id": "bge",
+        "api": 1,
+        "config": {
+          "tokenizer": "file:tokenizer",
+          "settings": "file:adapter_config"
+        }
+      },
+      "components": [
+        {
+          "id": "model",
+          "backend": {
+            "id": "rknn",
+            "api": 1
+          },
+          "compatibility": "unverified-example/rknn-rk3588",
+          "files": {
+            "weights": "weights"
+          }
+        }
+      ]
+    }
+  ]
+}

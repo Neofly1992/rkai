@@ -1,0 +1,15 @@
+{
+  "date": "2026-10-05",
+  "command": "uv run python scripts/verify_public_sources.py",
+  "result": "failed",
+  "stage": "ModelScope repo/files metadata",
+  "error": {
+    "http_status": 403,
+    "upstream_code": 10013201001
+  },
+  "complete_public_acquisition": "not_passed_this_run",
+  "previous_20261004_success": "retained as historical evidence; not replaced by this result",
+  "changed_identity_or_endpoints": false,
+  "automatic_retries_after_failure": 0,
+  "npu_execution": "not_run"
+}

@@ -1,0 +1,17 @@
+{
+  "date": "2026-10-05",
+  "model": "all-MiniLM-L6-v2",
+  "distribution": "independent wheel",
+  "device": "cpu",
+  "case": "context limit rejected without truncation",
+  "cli_exit_code": 2,
+  "terminal_error": {
+    "code": "context_limit",
+    "message": "Text exceeds embedding context budget",
+    "exit_code": 2,
+    "details": {
+      "diagnostics": []
+    }
+  },
+  "npu_execution": "not_run"
+}

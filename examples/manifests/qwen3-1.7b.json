@@ -1,0 +1,82 @@
+{
+  "schema": "rkai.model/v0",
+  "model": {
+    "id": "example/qwen3-1.7b",
+    "revision": "illustrative-1",
+    "description": "结构示例；不可下载，不代表硬件支持"
+  },
+  "sources": {
+    "release": {
+      "kind": "https",
+      "base_url": "https://example.invalid/qwen3-1.7b/"
+    }
+  },
+  "files": {
+    "weights": {
+      "path": "model.rkllm",
+      "size": 1,
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "location": {
+        "source": "release",
+        "path": "model.rkllm"
+      }
+    },
+    "tokenizer": {
+      "path": "tokenizer.json",
+      "size": 1,
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "location": {
+        "source": "release",
+        "path": "tokenizer.json"
+      }
+    },
+    "adapter_config": {
+      "path": "adapter.json",
+      "size": 1,
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "location": {
+        "source": "release",
+        "path": "adapter.json"
+      }
+    }
+  },
+  "plans": [
+    {
+      "id": "rk3588-npu",
+      "target": {
+        "os": "linux",
+        "arch": "aarch64",
+        "accelerator": "rockchip-npu",
+        "soc": "rk3588"
+      },
+      "capabilities": [
+        {
+          "id": "chat",
+          "version": 1
+        }
+      ],
+      "default_capability": "chat",
+      "adapter": {
+        "id": "qwen3",
+        "api": 1,
+        "config": {
+          "tokenizer": "file:tokenizer",
+          "settings": "file:adapter_config"
+        }
+      },
+      "components": [
+        {
+          "id": "model",
+          "backend": {
+            "id": "rkllm",
+            "api": 1
+          },
+          "compatibility": "unverified-example/rkllm-rk3588",
+          "files": {
+            "weights": "weights"
+          }
+        }
+      ]
+    }
+  ]
+}

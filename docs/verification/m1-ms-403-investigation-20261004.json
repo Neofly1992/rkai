@@ -1,0 +1,302 @@
+{
+  "date": "2026-10-04",
+  "purpose": "Investigate ModelScope 403 without changing origin, headers, credentials or proxy configuration",
+  "direct_request": {
+    "time_utc": "2026-10-04T12:33:21.935917+00:00",
+    "endpoint": "https://modelscope.cn/api/v1/models/pengzhendong/wetext/repo/files?Revision=master&Recursive=false&Root=",
+    "http_status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8"
+    },
+    "body": {
+      "Code": 200,
+      "Message": "success",
+      "Success": true,
+      "RequestId": "fb24bc4f-f5f9-4ae5-8fe8-a6d143c120e9"
+    },
+    "host": {
+      "os": "Darwin",
+      "arch": "arm64"
+    }
+  },
+  "stream_request": {
+    "time_utc": "2026-10-04T12:34:29.123555+00:00",
+    "mode": "same streaming request as production",
+    "endpoint": "https://modelscope.cn/api/v1/models/pengzhendong/wetext/repo/files?Revision=master&Recursive=false&Root=",
+    "http_status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8"
+    },
+    "body": {
+      "Code": 200,
+      "Message": "success",
+      "Success": true,
+      "RequestId": "bb92f8bf-5b2e-465b-80e5-714f91ad5d76"
+    }
+  },
+  "plain_script_before_diagnostic_change": {
+    "runs": 2,
+    "result": "failed",
+    "http_status": 403,
+    "stage": "ModelScope fixed_file metadata",
+    "endpoint": "https://modelscope.cn/api/v1/models/pengzhendong/wetext/repo/files?Revision=master&Recursive=false&Root=",
+    "body": "not retained by original read_url"
+  },
+  "instrumented_flow": {
+    "requests": [
+      {
+        "time_utc": "2026-10-04T12:35:10.544720+00:00",
+        "url": "https://huggingface.co/api/models/google-bert/bert-base-uncased/revision/main",
+        "status": 200,
+        "request_headers": {
+          "user-agent": "rkai/0.1",
+          "accept": "*/*",
+          "accept-encoding": "identity"
+        },
+        "cookie_present": false,
+        "response_headers": {
+          "content-type": "application/json; charset=utf-8",
+          "date": "Sun, 04 Oct 2026 12:35:10 GMT"
+        }
+      },
+      {
+        "time_utc": "2026-10-04T12:35:10.796067+00:00",
+        "url": "https://huggingface.co/google-bert/bert-base-uncased/resolve/86b5e0934494bd15c9632b12f734a8a67f723594/config.json",
+        "status": 307,
+        "request_headers": {
+          "user-agent": "rkai/0.1",
+          "accept": "*/*",
+          "accept-encoding": "identity"
+        },
+        "cookie_present": false,
+        "response_headers": {
+          "content-type": "text/plain; charset=utf-8",
+          "date": "Sun, 04 Oct 2026 12:35:10 GMT"
+        }
+      },
+      {
+        "time_utc": "2026-10-04T12:35:10.966470+00:00",
+        "url": "https://huggingface.co/api/resolve-cache/models/google-bert/bert-base-uncased/86b5e0934494bd15c9632b12f734a8a67f723594/config.json?%2Fgoogle-bert%2Fbert-base-uncased%2Fresolve%2F86b5e0934494bd15c9632b12f734a8a67f723594%2Fconfig.json=&etag=%2245a2321a7ecfdaaf60a6c1fd7f5463994cc8907d%22",
+        "status": 200,
+        "request_headers": {
+          "user-agent": "rkai/0.1",
+          "accept": "*/*",
+          "accept-encoding": "identity"
+        },
+        "cookie_present": false,
+        "response_headers": {
+          "content-type": "text/plain; charset=utf-8",
+          "date": "Sun, 03 May 2026 03:33:10 GMT"
+        }
+      },
+      {
+        "time_utc": "2026-10-04T12:35:11.212772+00:00",
+        "url": "https://huggingface.co/api/models/google-bert/bert-base-uncased/revision/main",
+        "status": 200,
+        "request_headers": {
+          "user-agent": "rkai/0.1",
+          "accept": "*/*",
+          "accept-encoding": "identity"
+        },
+        "cookie_present": false,
+        "response_headers": {
+          "content-type": "application/json; charset=utf-8",
+          "date": "Sun, 04 Oct 2026 12:35:11 GMT"
+        }
+      },
+      {
+        "time_utc": "2026-10-04T12:35:11.462537+00:00",
+        "url": "https://huggingface.co/google-bert/bert-base-uncased/resolve/86b5e0934494bd15c9632b12f734a8a67f723594/manifest.json",
+        "status": 404,
+        "request_headers": {
+          "user-agent": "rkai/0.1",
+          "accept": "*/*",
+          "accept-encoding": "identity"
+        },
+        "cookie_present": false,
+        "response_headers": {
+          "content-type": "text/plain; charset=utf-8",
+          "date": "Sun, 04 Oct 2026 12:35:11 GMT"
+        },
+        "error_body": {
+          "preview": "Entry not found"
+        }
+      },
+      {
+        "time_utc": "2026-10-04T12:35:11.661107+00:00",
+        "url": "https://modelscope.cn/api/v1/models/pengzhendong/wetext/repo/files?Revision=master&Recursive=false&Root=",
+        "status": 200,
+        "request_headers": {
+          "user-agent": "rkai/0.1",
+          "accept": "*/*",
+          "accept-encoding": "identity"
+        },
+        "cookie_present": false,
+        "response_headers": {
+          "content-type": "application/json; charset=utf-8",
+          "date": "Sun, 04 Oct 2026 12:35:11 GMT"
+        }
+      },
+      {
+        "time_utc": "2026-10-04T12:35:11.905305+00:00",
+        "url": "https://modelscope.cn/api/v1/models/pengzhendong/wetext/repo?Revision=3cda3e627e1c4acc696ff6f81abb86d4add8bd82&FilePath=configuration.json",
+        "status": 200,
+        "request_headers": {
+          "user-agent": "rkai/0.1",
+          "accept": "*/*",
+          "accept-encoding": "identity"
+        },
+        "cookie_present": true,
+        "response_headers": {
+          "content-type": "application/json",
+          "date": "Sun, 04 Oct 2026 12:35:11 GMT"
+        }
+      },
+      {
+        "time_utc": "2026-10-04T12:35:12.020593+00:00",
+        "url": "https://modelscope.cn/api/v1/models/pengzhendong/wetext/repo/files?Revision=master&Recursive=false&Root=",
+        "status": 200,
+        "request_headers": {
+          "user-agent": "rkai/0.1",
+          "accept": "*/*",
+          "accept-encoding": "identity"
+        },
+        "cookie_present": true,
+        "response_headers": {
+          "content-type": "application/json; charset=utf-8",
+          "date": "Sun, 04 Oct 2026 12:35:12 GMT"
+        }
+      },
+      {
+        "time_utc": "2026-10-04T12:35:12.293780+00:00",
+        "url": "https://huggingface.co/google-bert/bert-base-uncased/resolve/86b5e0934494bd15c9632b12f734a8a67f723594/config.json",
+        "status": 307,
+        "request_headers": {
+          "user-agent": "rkai/0.1",
+          "accept": "*/*",
+          "accept-encoding": "identity"
+        },
+        "cookie_present": false,
+        "response_headers": {
+          "content-type": "text/plain; charset=utf-8",
+          "date": "Sun, 04 Oct 2026 12:35:12 GMT"
+        }
+      },
+      {
+        "time_utc": "2026-10-04T12:35:12.471822+00:00",
+        "url": "https://huggingface.co/api/resolve-cache/models/google-bert/bert-base-uncased/86b5e0934494bd15c9632b12f734a8a67f723594/config.json?%2Fgoogle-bert%2Fbert-base-uncased%2Fresolve%2F86b5e0934494bd15c9632b12f734a8a67f723594%2Fconfig.json=&etag=%2245a2321a7ecfdaaf60a6c1fd7f5463994cc8907d%22",
+        "status": 200,
+        "request_headers": {
+          "user-agent": "rkai/0.1",
+          "accept": "*/*",
+          "accept-encoding": "identity"
+        },
+        "cookie_present": false,
+        "response_headers": {
+          "content-type": "text/plain; charset=utf-8",
+          "date": "Sun, 03 May 2026 03:33:10 GMT"
+        }
+      },
+      {
+        "time_utc": "2026-10-04T12:35:12.720673+00:00",
+        "url": "https://huggingface.co/google-bert/bert-base-uncased/resolve/86b5e0934494bd15c9632b12f734a8a67f723594/config.json",
+        "status": 307,
+        "request_headers": {
+          "user-agent": "rkai/0.1",
+          "accept": "*/*",
+          "accept-encoding": "identity"
+        },
+        "cookie_present": false,
+        "response_headers": {
+          "content-type": "text/plain; charset=utf-8",
+          "date": "Sun, 04 Oct 2026 12:35:12 GMT"
+        }
+      },
+      {
+        "time_utc": "2026-10-04T12:35:12.887033+00:00",
+        "url": "https://huggingface.co/api/resolve-cache/models/google-bert/bert-base-uncased/86b5e0934494bd15c9632b12f734a8a67f723594/config.json?%2Fgoogle-bert%2Fbert-base-uncased%2Fresolve%2F86b5e0934494bd15c9632b12f734a8a67f723594%2Fconfig.json=&etag=%2245a2321a7ecfdaaf60a6c1fd7f5463994cc8907d%22",
+        "status": 200,
+        "request_headers": {
+          "user-agent": "rkai/0.1",
+          "accept": "*/*",
+          "accept-encoding": "identity"
+        },
+        "cookie_present": false,
+        "response_headers": {
+          "content-type": "text/plain; charset=utf-8",
+          "date": "Sun, 03 May 2026 03:33:10 GMT"
+        }
+      },
+      {
+        "time_utc": "2026-10-04T12:35:13.071899+00:00",
+        "url": "https://modelscope.cn/api/v1/models/pengzhendong/wetext/repo?Revision=3cda3e627e1c4acc696ff6f81abb86d4add8bd82&FilePath=configuration.json",
+        "status": 200,
+        "request_headers": {
+          "user-agent": "rkai/0.1",
+          "accept": "*/*",
+          "accept-encoding": "identity"
+        },
+        "cookie_present": true,
+        "response_headers": {
+          "content-type": "application/json",
+          "date": "Sun, 04 Oct 2026 12:35:13 GMT"
+        }
+      }
+    ],
+    "outcome": {
+      "status": "passed",
+      "result": {
+        "kind": "real_public_https_and_sqlite",
+        "fixtures": [
+          {
+            "registry": "hf",
+            "repository": "google-bert/bert-base-uncased",
+            "selector": "main",
+            "revision": "86b5e0934494bd15c9632b12f734a8a67f723594",
+            "path": "config.json",
+            "size": 570,
+            "sha256": "7160e1553ad2ca51d8c1cb066be533db31826e12d173824c1bb0cb1a4f187d20",
+            "digest_evidence": "locally measured from public HTTPS",
+            "url": "https://huggingface.co/google-bert/bert-base-uncased/resolve/86b5e0934494bd15c9632b12f734a8a67f723594/config.json",
+            "missing_manifest_result": "missing_manifest"
+          },
+          {
+            "registry": "ms",
+            "repository": "pengzhendong/wetext",
+            "selector": "master",
+            "revision": "3cda3e627e1c4acc696ff6f81abb86d4add8bd82",
+            "path": "configuration.json",
+            "size": 36,
+            "sha256": "9a9b41224519cc2cd5e993d9bd161a4165bb0f7ddc58a91a63f8b0ced41ad4de",
+            "digest_evidence": "locally measured from public HTTPS",
+            "url": "https://modelscope.cn/api/v1/models/pengzhendong/wetext/repo?Revision=3cda3e627e1c4acc696ff6f81abb86d4add8bd82&FilePath=configuration.json",
+            "missing_manifest_result": "missing_manifest"
+          }
+        ],
+        "installed": {
+          "operation_id": "1d9874e44521442893e8e133aaa18f60",
+          "state": "completed",
+          "alias": "public-evidence",
+          "installation": "c61dfa2d985b1da7a9913baa678c0ed49709891cf6113d35baa71cba56343b37",
+          "snapshot": {
+            "kind": "local",
+            "manifest_hash": "53038834571a4c2b13f379d6385d3c77946a19ea1e4ec11d278fd7400488f4c9"
+          },
+          "file_state": "ready",
+          "execution_validation": "unverified"
+        },
+        "shared_alias_and_reopen": "passed",
+        "custom_https_file_source": "passed",
+        "external_manifest_preserved": true,
+        "npu_execution": "not_run"
+      }
+    }
+  },
+  "final_plain_script": {
+    "result": "passed",
+    "evidence": "m1-public-recheck-20261004.json",
+    "source_change": "bounded HTTP error evidence; numeric upstream Code only, no automatic rate-limit classification or retry"
+  },
+  "conclusion": "Same endpoint observed returning 200 and 403. Final uninstrumented end-to-end run passed. A previous documented response explicitly reported rate limiting, but the cause of all 403 responses and lasting stability are unproven.",
+  "hardware": "Current host Darwin/arm64; real RK3588 still not run; no board connection supplied"
+}

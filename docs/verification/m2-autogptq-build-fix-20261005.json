@@ -1,0 +1,14 @@
+{
+  "date": "2026-10-05",
+  "host": "darwin/arm64",
+  "python": "3.12.13",
+  "package": "auto_gptq",
+  "version": "0.7.1",
+  "build_environment": {
+    "BUILD_CUDA_EXT": "0",
+    "UV_NO_CACHE": "true"
+  },
+  "result": "hash-locked source build and temporary installation passed",
+  "native_cuda_extensions": [],
+  "evidence_scope": "AutoGPTQ packaging only; Linux RKLLM SDK import/build/export and NPU not_run"
+}

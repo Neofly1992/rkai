@@ -1,0 +1,56 @@
+{
+  "schema": "rkai.recipe/v0",
+  "id": "stories",
+  "model": {
+    "id": "verification/stories",
+    "revision": "499bc8821c6b12b4e53c5bffcb21ec206f212d81"
+  },
+  "converter": "gguf-import",
+  "inputs": {
+    "model": {
+      "path": "tinyllamas/stories260K.gguf",
+      "size": 1185376,
+      "sha256": "270cba1bd5109f42d03350f60406024560464db173c0e387d91f0426d3bd256d"
+    }
+  },
+  "output_plan": {
+    "id": "cpu",
+    "target": {
+      "os": "darwin",
+      "arch": "aarch64",
+      "accelerator": "cpu"
+    },
+    "capabilities": [
+      {
+        "id": "chat",
+        "version": 1
+      }
+    ],
+    "default_capability": "chat",
+    "adapter": {
+      "id": "gguf-chat",
+      "api": 1,
+      "config": {
+        "prompt_format": "plain"
+      }
+    },
+    "components": [
+      {
+        "id": "model",
+        "backend": {
+          "id": "llama-cpp",
+          "api": 1
+        },
+        "compatibility": "llama-cpp-python/0.3.16/cpu",
+        "files": {
+          "model": "model"
+        },
+        "config": {
+          "memory_bytes": 536870912,
+          "memory_evidence": "conservative CPU verification admission allowance; not measured NPU peak",
+          "context_length": 1024
+        }
+      }
+    ]
+  }
+}

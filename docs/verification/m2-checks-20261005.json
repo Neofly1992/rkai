@@ -1,0 +1,51 @@
+{
+  "date": "2026-10-05",
+  "tests": {
+    "command": "uv run --locked pytest -q -W error::pytest.PytestUnhandledThreadExceptionWarning",
+    "passed": 158,
+    "failed": 0,
+    "hardware": "not_run"
+  },
+  "lint": "Ruff passed",
+  "format": {
+    "files": 34,
+    "result": "passed"
+  },
+  "sdist_and_wheel": "built offline; independent usage recorded separately",
+  "source_hashes": {
+    "src/rkai/__init__.py": "5397887f66d576945a2728da0e921b3c17959275ea512b5cb5d3681a7b2240b0",
+    "src/rkai/adapters.py": "dd11c4652ea15144d5ee1451d538904ba17b751e9bedde809afd1eb6255fac6d",
+    "src/rkai/backends.py": "41cdddcc93e706da67477f9d18ca1e95f3387b1e7293fb1f0891067e532d7827",
+    "src/rkai/capabilities.py": "6f20e3baa6d5bc0d9ee5b785eaab4c58eff0e26657bde7a3c207841607f8eef6",
+    "src/rkai/cli.py": "ec6e9fc3503f0724d4aa1d7a10585efafd7383d9622df031e9f13b621d7e9c1d",
+    "src/rkai/config.py": "dde1c6883491f7bb4705b471e54938b37c22eac05d9157d39e676ee2763ced51",
+    "src/rkai/conversion.py": "18b1c4a1ac853f50a0e27e5258d257ccec94b11318bd44546b27d305a1424146",
+    "src/rkai/doctor.py": "afcb3529a5b457423998f010b475fb0114feb27dea41004e3f2ec537ec574297",
+    "src/rkai/download.py": "3357310428c5d152013c33097acb3935887fa320bc7884b1686c54c655a20b07",
+    "src/rkai/environments.py": "2f26c2b252eaa5535cc0531e002e29e557b06bd168f0888f7c581e19f837ad1d",
+    "src/rkai/errors.py": "4729dcde546278e8c832b6e731c1bc7ec09dca8f57a3b1e70e4494d850816d12",
+    "src/rkai/execution.py": "bb7fd0df3d7cc4abb2b319ca605d5584c471c2960d5107b8d36ffccfa093a2b1",
+    "src/rkai/files.py": "8a1e47131a371d6e6d6b45b61a64ad42cf2763bf26415d5fd24c26feae3fa2cb",
+    "src/rkai/ipc.py": "608c63aac8531ebf64c9bf3d5a20019f57b6d6d0c1f3c088d2f16847aaa96ba0",
+    "src/rkai/manifest.py": "14194dae805661046729902f6fd1b3b7da1b2f5d0c83adae603e3322d0852fe1",
+    "src/rkai/native/rkllm_bridge.cpp": "c903f81caec25a97d9db842da4d299eee9ea72c1d6e94d49870b9333b12161b3",
+    "src/rkai/processes.py": "a6b33b204534053ca4ec3e69218edea2197ee851cbd60aea50dfdf8cf6a2174e",
+    "src/rkai/rkllm.py": "1a5965ec5fc584b66934155a9dc144f494beda49b59b9233e55a3e30bdc594d1",
+    "src/rkai/rknn.py": "523ceeeab169c954fea335d0eb8934e1c0bec41e4902cdd55cc4264cf4f1fffe",
+    "src/rkai/run_cli.py": "bbb1f411023fd192958ee09c20f0b528c340a6352661def5d267ae92ce83ff0e",
+    "src/rkai/runtime_check.py": "869cbdf21978ad9265f28c33129da6f1ef2393c68776a1782bc8b59208fcc865",
+    "src/rkai/sources.py": "2ecefc9c7e825d3428671e50ad1d10e3b1beb01f9acf03b117e5f929f0eaadd9",
+    "src/rkai/storage.py": "3d4b0351d916efa8bf019d4974f81a3af6e1b4d9775f1052637cc6ac165faa8e",
+    "src/rkai/supervisor.py": "c236a43aef04d15efcab55e77bee46a4950e1f55fbcdf2ae2771ee1d0ab1e451",
+    "src/rkai/toolchains/build-constraints.txt": "4750e8f22f195d4bd36b37a6f9913d8166391168122343d90062ebc8c11d4355",
+    "src/rkai/toolchains/llama-cpu.txt": "1a12fee1c7149595ec2ec36d7905c986d7a34f87338e509e00546ccc029aec95",
+    "src/rkai/toolchains/onnx-cpu.txt": "50614f67ddc90e7ead1b5b6edcbea01596fcfbcd28d42509614ad1a667d5cac8",
+    "src/rkai/toolchains/rkllm-convert.txt": "30ba74281626b69280ac31567501c9b22886972ebd621a47a92d12d9cb2a4ef7",
+    "src/rkai/toolchains/rknn-convert-aarch64.txt": "e43e2bbe1b7baea77d16b3650ef467ada53080c5668ebce8892bd4891afdb405",
+    "src/rkai/toolchains/rknn-convert-x86_64.txt": "ed552914eb73e6e68d5978c16a6d15035dd7b39e9fea6b6e86d4748a6c5dbea4",
+    "src/rkai/toolchains/rockchip-assets.json": "186fec3f34793333868c41fc0948315a3d66663684a564e5bb2373205700c1da",
+    "src/rkai/worker.py": "82a5fe8844943729f4a89a6fb594981e3357a889d23189ba9da553e2a191350b"
+  },
+  "hardware_validation": "not_run",
+  "m3": "not_implemented"
+}

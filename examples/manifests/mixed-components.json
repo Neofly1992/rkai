@@ -1,0 +1,102 @@
+{
+  "schema": "rkai.model/v0",
+  "model": {
+    "id": "example/vision-language",
+    "revision": "illustrative-1",
+    "description": "结构示例；不可下载，不代表硬件支持"
+  },
+  "sources": {
+    "release": {
+      "kind": "https",
+      "base_url": "https://example.invalid/vision-language/"
+    }
+  },
+  "files": {
+    "weights": {
+      "path": "model.rkllm",
+      "size": 1,
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "location": {
+        "source": "release",
+        "path": "model.rkllm"
+      }
+    },
+    "tokenizer": {
+      "path": "tokenizer.json",
+      "size": 1,
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "location": {
+        "source": "release",
+        "path": "tokenizer.json"
+      }
+    },
+    "adapter_config": {
+      "path": "adapter.json",
+      "size": 1,
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "location": {
+        "source": "release",
+        "path": "adapter.json"
+      }
+    },
+    "vision_weights": {
+      "path": "vision.rknn",
+      "size": 1,
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "location": {
+        "source": "release",
+        "path": "vision.rknn"
+      }
+    }
+  },
+  "plans": [
+    {
+      "id": "rk3588-npu",
+      "target": {
+        "os": "linux",
+        "arch": "aarch64",
+        "accelerator": "rockchip-npu",
+        "soc": "rk3588"
+      },
+      "capabilities": [
+        {
+          "id": "chat",
+          "version": 1
+        }
+      ],
+      "default_capability": "chat",
+      "adapter": {
+        "id": "vision-language-example",
+        "api": 1,
+        "config": {
+          "tokenizer": "file:tokenizer",
+          "settings": "file:adapter_config"
+        }
+      },
+      "components": [
+        {
+          "id": "language",
+          "backend": {
+            "id": "rkllm",
+            "api": 1
+          },
+          "compatibility": "unverified-example/rkllm-rk3588",
+          "files": {
+            "weights": "weights"
+          }
+        },
+        {
+          "id": "vision",
+          "backend": {
+            "id": "rknn",
+            "api": 1
+          },
+          "compatibility": "unverified-example/rknn-rk3588",
+          "files": {
+            "weights": "vision_weights"
+          }
+        }
+      ]
+    }
+  ]
+}

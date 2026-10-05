@@ -1,0 +1,22 @@
+{
+  "npu_execution": "not_run",
+  "distribution": "independent wheel/main dependencies only",
+  "checks": [
+    {
+      "profile": "release",
+      "classification": "passed",
+      "device": "cpu"
+    },
+    {
+      "profile": "debug",
+      "classification": "passed",
+      "device": "cpu"
+    },
+    {
+      "interactive": "three real requests and /reset passed",
+      "stdout": "valid NDJSON",
+      "prompts": "stderr",
+      "device": "cpu"
+    }
+  ]
+}

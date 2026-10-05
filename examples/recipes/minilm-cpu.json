@@ -1,0 +1,61 @@
+{
+  "schema": "rkai.recipe/v0",
+  "id": "minilm",
+  "model": {
+    "id": "verification/minilm",
+    "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41"
+  },
+  "converter": "onnx-import",
+  "inputs": {
+    "model": {
+      "path": "onnx/model.onnx",
+      "size": 90405214,
+      "sha256": "6fd5d72fe4589f189f8ebc006442dbb529bb7ce38f8082112682524616046452"
+    },
+    "tokenizer": {
+      "path": "tokenizer.json",
+      "size": 466247,
+      "sha256": "be50c3628f2bf5bb5e3a7f17b1f74611b2561a3a27eeab05e5aa30f411572037"
+    }
+  },
+  "output_plan": {
+    "id": "cpu",
+    "target": {
+      "os": "darwin",
+      "arch": "aarch64",
+      "accelerator": "cpu"
+    },
+    "capabilities": [
+      {
+        "id": "embedding",
+        "version": 1
+      }
+    ],
+    "default_capability": "embedding",
+    "adapter": {
+      "id": "sentence-embedding",
+      "api": 1,
+      "config": {
+        "tokenizer": "file:tokenizer"
+      }
+    },
+    "components": [
+      {
+        "id": "model",
+        "backend": {
+          "id": "onnxruntime",
+          "api": 1
+        },
+        "compatibility": "onnxruntime/1.23.2/cpu",
+        "files": {
+          "model": "model"
+        },
+        "config": {
+          "memory_bytes": 536870912,
+          "memory_evidence": "conservative CPU verification admission allowance; not measured NPU peak",
+          "context_length": 512
+        }
+      }
+    ]
+  }
+}

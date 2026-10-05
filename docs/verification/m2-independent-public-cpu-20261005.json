@@ -1,0 +1,306 @@
+{
+  "device": "cpu",
+  "npu_execution": "not_run",
+  "models": [
+    {
+      "name": "mobilenet",
+      "repository": "onnxmodelzoo/mobilenetv2-12",
+      "revision": "23a2a25eaaa6fcd61865414c8a1acf13dda66b7a",
+      "input_files": {
+        "model": {
+          "path": "mobilenetv2-12.onnx",
+          "size": 13964571,
+          "sha256": "c0c3f76d93fa3fd6580652a45618618a220fced18babf65774ed169de0432ad5"
+        },
+        "labels": {
+          "path": "labels.txt",
+          "size": 21675,
+          "sha256": "4eb3da435cf544e4a6f390f62c84cb9c9bb68cf8b14e97f8a063452382e5efd2"
+        }
+      },
+      "runtime": {
+        "model": {
+          "runtime": "1.23.2",
+          "provider": "CPUExecutionProvider"
+        }
+      },
+      "conversion_operation": "8523decc4ea14608a7e7ccac9495fab8",
+      "event_types": [
+        "accepted",
+        "started",
+        "output",
+        "completed"
+      ],
+      "conversion": {
+        "toolchain_lock": "b7f72a30ac2fefbc3c4aa2dbf8cad4f6e0ae6de892ceade86dd07e0e58fd2a2a",
+        "converter_implementation_sha256": "81ae61f5216f638f817b74b0de3f18cebe318a76438f94d5b4d8f913b0f1af36",
+        "conversion_evidence": {
+          "graph_check": "passed",
+          "cpu_load": "passed",
+          "runtime": "1.23.2",
+          "inputs": [
+            "input"
+          ]
+        },
+        "input_snapshot": {
+          "kind": "local",
+          "input_digests": {
+            "model": "c0c3f76d93fa3fd6580652a45618618a220fced18babf65774ed169de0432ad5",
+            "labels": "4eb3da435cf544e4a6f390f62c84cb9c9bb68cf8b14e97f8a063452382e5efd2"
+          },
+          "manifest_hash": "6b3553a34269f3a57998874197159779a9f7928a574813b7b184b182dbbdf557"
+        }
+      },
+      "top_k": [
+        {
+          "index": 812,
+          "label": "space shuttle",
+          "score": 0.9996797788259594
+        },
+        {
+          "index": 814,
+          "label": "speedboat",
+          "score": 9.3362025990592e-05
+        },
+        {
+          "index": 484,
+          "label": "catamaran",
+          "score": 6.598688144499023e-05
+        },
+        {
+          "index": 405,
+          "label": "airship, dirigible",
+          "score": 2.5134112022330685e-05
+        },
+        {
+          "index": 833,
+          "label": "submarine, pigboat, sub, U-boat",
+          "score": 2.305767189584311e-05
+        }
+      ]
+    },
+    {
+      "name": "minilm",
+      "repository": "sentence-transformers/all-MiniLM-L6-v2",
+      "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+      "input_files": {
+        "model": {
+          "path": "onnx/model.onnx",
+          "size": 90405214,
+          "sha256": "6fd5d72fe4589f189f8ebc006442dbb529bb7ce38f8082112682524616046452"
+        },
+        "tokenizer": {
+          "path": "tokenizer.json",
+          "size": 466247,
+          "sha256": "be50c3628f2bf5bb5e3a7f17b1f74611b2561a3a27eeab05e5aa30f411572037"
+        }
+      },
+      "runtime": {
+        "model": {
+          "runtime": "1.23.2",
+          "provider": "CPUExecutionProvider"
+        }
+      },
+      "conversion_operation": "d41308d60df347fb9cf3442e6236f35b",
+      "event_types": [
+        "accepted",
+        "started",
+        "output",
+        "completed"
+      ],
+      "conversion": {
+        "toolchain_lock": "b7f72a30ac2fefbc3c4aa2dbf8cad4f6e0ae6de892ceade86dd07e0e58fd2a2a",
+        "converter_implementation_sha256": "81ae61f5216f638f817b74b0de3f18cebe318a76438f94d5b4d8f913b0f1af36",
+        "conversion_evidence": {
+          "graph_check": "passed",
+          "cpu_load": "passed",
+          "runtime": "1.23.2",
+          "inputs": [
+            "input_ids",
+            "attention_mask",
+            "token_type_ids"
+          ]
+        },
+        "input_snapshot": {
+          "kind": "huggingface",
+          "origin": "https://huggingface.co",
+          "registry": "hf",
+          "repository": "sentence-transformers/all-MiniLM-L6-v2",
+          "selector": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+          "file_revisions": {
+            "model": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+            "tokenizer": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41"
+          },
+          "manifest_hash": "e10b27bee710222606e58f927ad86d4438e684c4eed16af01fb7ce947425f34c"
+        }
+      },
+      "dimension": 384,
+      "cosine_similarities": [
+        0.9732977983166261,
+        0.046354997637207004
+      ]
+    },
+    {
+      "name": "stories",
+      "repository": "ggml-org/models",
+      "revision": "499bc8821c6b12b4e53c5bffcb21ec206f212d81",
+      "input_files": {
+        "model": {
+          "path": "tinyllamas/stories260K.gguf",
+          "size": 1185376,
+          "sha256": "270cba1bd5109f42d03350f60406024560464db173c0e387d91f0426d3bd256d"
+        }
+      },
+      "runtime": {
+        "model": {
+          "runtime": "0.3.16",
+          "provider": "cpu"
+        }
+      },
+      "conversion_operation": "5c25eecaf81e49908035c80962f85296",
+      "event_types": [
+        "accepted",
+        "started",
+        "output",
+        "output",
+        "output",
+        "output",
+        "output",
+        "output",
+        "output",
+        "output",
+        "output",
+        "output",
+        "output",
+        "output",
+        "output",
+        "output",
+        "output",
+        "output",
+        "output",
+        "output",
+        "output",
+        "output",
+        "output",
+        "output",
+        "output",
+        "output",
+        "output",
+        "output",
+        "output",
+        "output",
+        "output",
+        "output",
+        "output",
+        "output",
+        "output",
+        "completed"
+      ],
+      "conversion": {
+        "toolchain_lock": "940f7d0b9b16d742ca730eba189f42113fcad143c904e5cfecc884fe095bc221",
+        "converter_implementation_sha256": "81ae61f5216f638f817b74b0de3f18cebe318a76438f94d5b4d8f913b0f1af36",
+        "conversion_evidence": {
+          "cpu_load": "passed",
+          "runtime": "0.3.16",
+          "provider": "cpu"
+        },
+        "input_snapshot": {
+          "kind": "local",
+          "input_digests": {
+            "model": "270cba1bd5109f42d03350f60406024560464db173c0e387d91f0426d3bd256d"
+          },
+          "manifest_hash": "efac17c3a51930dba721a0b02ab45fbe5d2624b2237581cd245d75d310f34648"
+        }
+      },
+      "text": ", there was a little girl named Lily. She loved to play outside in the park. One day, she saw",
+      "finish_reason": "length",
+      "semantics": "plain text continuation; not instruction/chat quality",
+      "stream_cancel": "passed after output; no replay",
+      "slow_consumer": "real native stream reaped; scaled queue=4, drain deadline=0.1s"
+    }
+  ],
+  "host": [
+    "darwin",
+    "aarch64"
+  ],
+  "environments": {
+    "onnx-cpu": {
+      "lock": "b7f72a30ac2fefbc3c4aa2dbf8cad4f6e0ae6de892ceade86dd07e0e58fd2a2a",
+      "python": "3.12.13",
+      "packages": {
+        "coloredlogs": "15.0.1",
+        "humanfriendly": "10.0",
+        "tokenizers": "0.22.1",
+        "click": "8.5.0",
+        "packaging": "26.3",
+        "protobuf": "7.36.2",
+        "hf-xet": "1.6.0",
+        "filelock": "4.0.10",
+        "pydantic_core": "2.46.5",
+        "onnx": "1.16.1",
+        "numpy": "1.26.4",
+        "httpcore": "1.0.9",
+        "onnxruntime": "1.23.2",
+        "sympy": "1.14.0",
+        "tqdm": "4.70.1",
+        "h11": "0.16.0",
+        "pydantic": "2.13.5",
+        "mpmath": "1.3.0",
+        "PyYAML": "6.0.3",
+        "fsspec": "2026.9.0",
+        "certifi": "2026.7.22",
+        "annotated-types": "0.8.0",
+        "typing-inspection": "0.4.4",
+        "flatbuffers": "25.12.19",
+        "httpx": "0.28.1",
+        "typing_extensions": "4.16.0",
+        "pillow": "11.3.0",
+        "anyio": "4.15.1",
+        "huggingface_hub": "1.33.0",
+        "idna": "3.20"
+      },
+      "preparation_probe": "import/load only; no model execution"
+    },
+    "llama-cpu": {
+      "lock": "940f7d0b9b16d742ca730eba189f42113fcad143c904e5cfecc884fe095bc221",
+      "python": "3.12.13",
+      "packages": {
+        "coloredlogs": "15.0.1",
+        "humanfriendly": "10.0",
+        "tokenizers": "0.22.1",
+        "click": "8.5.0",
+        "diskcache": "5.6.3",
+        "packaging": "26.3",
+        "protobuf": "7.36.2",
+        "hf-xet": "1.6.0",
+        "filelock": "4.0.10",
+        "pydantic_core": "2.46.5",
+        "onnx": "1.16.1",
+        "numpy": "1.26.4",
+        "httpcore": "1.0.9",
+        "onnxruntime": "1.23.2",
+        "sympy": "1.14.0",
+        "tqdm": "4.70.1",
+        "llama_cpp_python": "0.3.16",
+        "h11": "0.16.0",
+        "pydantic": "2.13.5",
+        "mpmath": "1.3.0",
+        "PyYAML": "6.0.3",
+        "fsspec": "2026.9.0",
+        "certifi": "2026.7.22",
+        "Jinja2": "3.1.6",
+        "annotated-types": "0.8.0",
+        "typing-inspection": "0.4.4",
+        "flatbuffers": "25.12.19",
+        "httpx": "0.28.1",
+        "typing_extensions": "4.16.0",
+        "MarkupSafe": "3.0.4",
+        "pillow": "11.3.0",
+        "anyio": "4.15.1",
+        "huggingface_hub": "1.33.0",
+        "idna": "3.20"
+      },
+      "preparation_probe": "import/load only; no model execution"
+    }
+  }
+}

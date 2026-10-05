@@ -1,0 +1,63 @@
+{
+  "date": "2026-10-05",
+  "host": "darwin/arm64",
+  "review_findings_fixed": 9,
+  "tests": {
+    "command": "uv run --locked pytest -q",
+    "passed": 173,
+    "failed": 0,
+    "seconds": 12.85,
+    "new_regression_cases": 15
+  },
+  "lint": "Ruff passed",
+  "format": {
+    "files": 36,
+    "result": "passed"
+  },
+  "sdist_and_wheel": "built offline; independent wheel usage passed",
+  "public_cpu_models": [
+    "MobileNetV2",
+    "all-MiniLM-L6-v2",
+    "stories260K"
+  ],
+  "hardware_validation": "not_run",
+  "linux_sdk_import_build_export": "not_run",
+  "quantization_precision": "not_run",
+  "m3": "not_implemented",
+  "source_hashes": {
+    "src/rkai/__init__.py": "5397887f66d576945a2728da0e921b3c17959275ea512b5cb5d3681a7b2240b0",
+    "src/rkai/adapters.py": "8735ebef2dfbd9b3fa5ae412784be267da34f50b0ff1eb30ac04c11a8b32b94c",
+    "src/rkai/backends.py": "41cdddcc93e706da67477f9d18ca1e95f3387b1e7293fb1f0891067e532d7827",
+    "src/rkai/capabilities.py": "6f20e3baa6d5bc0d9ee5b785eaab4c58eff0e26657bde7a3c207841607f8eef6",
+    "src/rkai/cli.py": "ec6e9fc3503f0724d4aa1d7a10585efafd7383d9622df031e9f13b621d7e9c1d",
+    "src/rkai/config.py": "dde1c6883491f7bb4705b471e54938b37c22eac05d9157d39e676ee2763ced51",
+    "src/rkai/conversion.py": "81ae61f5216f638f817b74b0de3f18cebe318a76438f94d5b4d8f913b0f1af36",
+    "src/rkai/diagnostics.py": "90740ef4470940a4b95aaf5ed4db5b4225a4bda0532d54488e2fe297940aaa77",
+    "src/rkai/doctor.py": "afcb3529a5b457423998f010b475fb0114feb27dea41004e3f2ec537ec574297",
+    "src/rkai/download.py": "3357310428c5d152013c33097acb3935887fa320bc7884b1686c54c655a20b07",
+    "src/rkai/environments.py": "8ac1ef114178022060cbd95194e51b2b62fd7d27dc9df5a35a912fc394ab02b1",
+    "src/rkai/errors.py": "7876966b7591809128e30b47c1f41650f777f19911ff222d150d20a20c84f889",
+    "src/rkai/execution.py": "a53d7592be32b60e2aa35a0a2dffbab77eaf03b2d0cb70569e4e36408d48dc7b",
+    "src/rkai/files.py": "8a1e47131a371d6e6d6b45b61a64ad42cf2763bf26415d5fd24c26feae3fa2cb",
+    "src/rkai/ipc.py": "608c63aac8531ebf64c9bf3d5a20019f57b6d6d0c1f3c088d2f16847aaa96ba0",
+    "src/rkai/manifest.py": "14194dae805661046729902f6fd1b3b7da1b2f5d0c83adae603e3322d0852fe1",
+    "src/rkai/native/rkllm_bridge.cpp": "c903f81caec25a97d9db842da4d299eee9ea72c1d6e94d49870b9333b12161b3",
+    "src/rkai/processes.py": "150940f6846e41c676710342800f981f0290da96f8510f0e828f15a77f325053",
+    "src/rkai/rkllm.py": "1a5965ec5fc584b66934155a9dc144f494beda49b59b9233e55a3e30bdc594d1",
+    "src/rkai/rknn.py": "523ceeeab169c954fea335d0eb8934e1c0bec41e4902cdd55cc4264cf4f1fffe",
+    "src/rkai/run_cli.py": "797f090d14b2288514fbf736d90db796feff3040a3893248156eae3a4f65dcb1",
+    "src/rkai/runtime_check.py": "1156649a7e940c6c8eb8e5f89370d2182b273262a82ef8a5cb603e6c65adfc88",
+    "src/rkai/sources.py": "2ecefc9c7e825d3428671e50ad1d10e3b1beb01f9acf03b117e5f929f0eaadd9",
+    "src/rkai/storage.py": "3d4b0351d916efa8bf019d4974f81a3af6e1b4d9775f1052637cc6ac165faa8e",
+    "src/rkai/supervisor.py": "c236a43aef04d15efcab55e77bee46a4950e1f55fbcdf2ae2771ee1d0ab1e451",
+    "src/rkai/toolchains/build-constraints.txt": "4750e8f22f195d4bd36b37a6f9913d8166391168122343d90062ebc8c11d4355",
+    "src/rkai/toolchains/llama-cpu.txt": "1a12fee1c7149595ec2ec36d7905c986d7a34f87338e509e00546ccc029aec95",
+    "src/rkai/toolchains/onnx-cpu.txt": "50614f67ddc90e7ead1b5b6edcbea01596fcfbcd28d42509614ad1a667d5cac8",
+    "src/rkai/toolchains/rkllm-convert.txt": "30ba74281626b69280ac31567501c9b22886972ebd621a47a92d12d9cb2a4ef7",
+    "src/rkai/toolchains/rknn-convert-aarch64.txt": "e43e2bbe1b7baea77d16b3650ef467ada53080c5668ebce8892bd4891afdb405",
+    "src/rkai/toolchains/rknn-convert-x86_64.txt": "ed552914eb73e6e68d5978c16a6d15035dd7b39e9fea6b6e86d4748a6c5dbea4",
+    "src/rkai/toolchains/rockchip-assets.json": "186fec3f34793333868c41fc0948315a3d66663684a564e5bb2373205700c1da",
+    "src/rkai/worker.py": "67903a6101dddfc54135c4e11196f773387fb0e2aee14f25e395398e59fe8499"
+  },
+  "regression_test_sha256": "3b426248e52dfa1bd22b1d9f391897b8330ad58bac783e6fc4a920b4d46d22f5"
+}

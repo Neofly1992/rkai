@@ -1,0 +1,39 @@
+{
+  "host": "darwin/aarch64",
+  "rknn": {
+    "header": {
+      "path": "rknpu2/runtime/Linux/librknn_api/include/rknn_api.h",
+      "url": "https://raw.githubusercontent.com/airockchip/rknn-toolkit2/59a913d172e7f5ff03c9076e2ec7b1b1288ffd08/rknpu2/runtime/Linux/librknn_api/include/rknn_api.h",
+      "size": 35707,
+      "sha256": "c48e11a6f41b451a5fd1e4ad774ea60252d3d94f78bee9b21ea3d21b21deba9a"
+    },
+    "c_sizeof": [
+      8,
+      376,
+      32,
+      24,
+      512
+    ],
+    "ctypes_sizeof": [
+      8,
+      376,
+      32,
+      24,
+      512
+    ],
+    "validation": "host static layout only; target ABI not_run"
+  },
+  "rkllm": {
+    "header": {
+      "path": "rkllm-runtime/Linux/librkllm_api/include/rkllm.h",
+      "url": "https://raw.githubusercontent.com/airockchip/rknn-llm/f7390530443bf84f0394255a449d7cbe81e69d1c/rkllm-runtime/Linux/librkllm_api/include/rkllm.h",
+      "size": 23464,
+      "sha256": "4ad19442de58df1b7d1ed0884ed75b8d4b5107cc4e75b7e44900b1f95a32c57c"
+    },
+    "bridge_syntax": "C++17 syntax-only passed against pinned official header",
+    "target_link": "not_run",
+    "bridge_sha256": "c903f81caec25a97d9db842da4d299eee9ea72c1d6e94d49870b9333b12161b3"
+  },
+  "docker_linux_host": "Docker CLI/app present but local daemon socket unavailable; no usable Linux host validated",
+  "npu_execution": "not_run"
+}

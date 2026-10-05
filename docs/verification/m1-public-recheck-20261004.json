@@ -1,0 +1,45 @@
+{
+  "kind": "real_public_https_and_sqlite",
+  "fixtures": [
+    {
+      "registry": "hf",
+      "repository": "google-bert/bert-base-uncased",
+      "selector": "main",
+      "revision": "86b5e0934494bd15c9632b12f734a8a67f723594",
+      "path": "config.json",
+      "size": 570,
+      "sha256": "7160e1553ad2ca51d8c1cb066be533db31826e12d173824c1bb0cb1a4f187d20",
+      "digest_evidence": "locally measured from public HTTPS",
+      "url": "https://huggingface.co/google-bert/bert-base-uncased/resolve/86b5e0934494bd15c9632b12f734a8a67f723594/config.json",
+      "missing_manifest_result": "missing_manifest"
+    },
+    {
+      "registry": "ms",
+      "repository": "pengzhendong/wetext",
+      "selector": "master",
+      "revision": "3cda3e627e1c4acc696ff6f81abb86d4add8bd82",
+      "path": "configuration.json",
+      "size": 36,
+      "sha256": "9a9b41224519cc2cd5e993d9bd161a4165bb0f7ddc58a91a63f8b0ced41ad4de",
+      "digest_evidence": "locally measured from public HTTPS",
+      "url": "https://modelscope.cn/api/v1/models/pengzhendong/wetext/repo?Revision=3cda3e627e1c4acc696ff6f81abb86d4add8bd82&FilePath=configuration.json",
+      "missing_manifest_result": "missing_manifest"
+    }
+  ],
+  "installed": {
+    "operation_id": "56acacdef3264f9dab5edc3c5050edd5",
+    "state": "completed",
+    "alias": "public-evidence",
+    "installation": "c61dfa2d985b1da7a9913baa678c0ed49709891cf6113d35baa71cba56343b37",
+    "snapshot": {
+      "kind": "local",
+      "manifest_hash": "53038834571a4c2b13f379d6385d3c77946a19ea1e4ec11d278fd7400488f4c9"
+    },
+    "file_state": "ready",
+    "execution_validation": "unverified"
+  },
+  "shared_alias_and_reopen": "passed",
+  "custom_https_file_source": "passed",
+  "external_manifest_preserved": true,
+  "npu_execution": "not_run"
+}

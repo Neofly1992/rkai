@@ -1,0 +1,28 @@
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "rkai"
+version = "0.1.0"
+description = "Model acquisition, conversion and local execution for Rockchip platforms"
+readme = "README.md"
+requires-python = ">=3.12,<3.15"
+license = "MIT"
+dependencies = ["httpx>=0.28,<0.29", "pydantic>=2.12,<3"]
+
+[project.scripts]
+rkai = "rkai.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8.4,<10", "ruff>=0.14,<1", "onnx==1.16.1",
+       "onnxruntime==1.23.2", "numpy==1.26.4", "Pillow==11.3.0", "tokenizers==0.22.1"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]

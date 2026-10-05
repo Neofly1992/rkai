@@ -1,0 +1,70 @@
+[
+  {
+    "path": "rknn-toolkit-lite2/packages/rknn_toolkit_lite2-2.3.2-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl",
+    "url": "https://raw.githubusercontent.com/airockchip/rknn-toolkit2/59a913d172e7f5ff03c9076e2ec7b1b1288ffd08/rknn-toolkit-lite2/packages/rknn_toolkit_lite2-2.3.2-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl",
+    "size": 527458,
+    "sha256": "e1e4ec691fed900c0e6fde5e7d8eeba17f806aa45092b63b361ee775e2c1b50e"
+  },
+  {
+    "path": "rknn-toolkit2/packages/arm64/rknn_toolkit2-2.3.2-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl",
+    "url": "https://raw.githubusercontent.com/airockchip/rknn-toolkit2/59a913d172e7f5ff03c9076e2ec7b1b1288ffd08/rknn-toolkit2/packages/arm64/rknn_toolkit2-2.3.2-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl",
+    "size": 36415792,
+    "sha256": "6fe85905d5d339b6c6fea224599df001089438443be43f56a3cc32b77ab14b1c"
+  },
+  {
+    "path": "rknn-toolkit2/packages/x86_64/rknn_toolkit2-2.3.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+    "url": "https://raw.githubusercontent.com/airockchip/rknn-toolkit2/59a913d172e7f5ff03c9076e2ec7b1b1288ffd08/rknn-toolkit2/packages/x86_64/rknn_toolkit2-2.3.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+    "size": 38826270,
+    "sha256": "504d7fcf6a792dfa874e25155de0afb5d6650f04a1a0d49b0886934bec4741ef"
+  },
+  {
+    "path": "rknpu2/runtime/Linux/librknn_api/aarch64/librknnrt.so",
+    "url": "https://raw.githubusercontent.com/airockchip/rknn-toolkit2/59a913d172e7f5ff03c9076e2ec7b1b1288ffd08/rknpu2/runtime/Linux/librknn_api/aarch64/librknnrt.so",
+    "size": 7726232,
+    "sha256": "d31fc19c85b85f6091b2bd0f6af9d962d5264a4e410bfb536402ec92bac738e8"
+  },
+  {
+    "path": "rkllm-runtime/Linux/librkllm_api/include/rkllm.h",
+    "url": "https://raw.githubusercontent.com/airockchip/rknn-llm/f7390530443bf84f0394255a449d7cbe81e69d1c/rkllm-runtime/Linux/librkllm_api/include/rkllm.h",
+    "size": 23464,
+    "sha256": "4ad19442de58df1b7d1ed0884ed75b8d4b5107cc4e75b7e44900b1f95a32c57c"
+  },
+  {
+    "path": "rkllm-runtime/Linux/librkllm_api/aarch64/librkllmrt.so",
+    "url": "https://raw.githubusercontent.com/airockchip/rknn-llm/f7390530443bf84f0394255a449d7cbe81e69d1c/rkllm-runtime/Linux/librkllm_api/aarch64/librkllmrt.so",
+    "size": 7674816,
+    "sha256": "f25e9b099db08aaacd0a3ac62b4697d3951d6ae61ae41ea09f6702cfa89eb32c"
+  },
+  {
+    "path": "rkllm-toolkit/packages/requirements.txt",
+    "url": "https://raw.githubusercontent.com/airockchip/rknn-llm/f7390530443bf84f0394255a449d7cbe81e69d1c/rkllm-toolkit/packages/requirements.txt",
+    "size": 554,
+    "sha256": "3eedb367f80ac0a0a34028f1986cfd3ec1f16960e75aaafcc501c4260b0d2e98"
+  },
+  {
+    "path": "rkllm-toolkit/packages/rkllm_toolkit-1.3.1-cp312-cp312-linux_x86_64.whl",
+    "url": "https://raw.githubusercontent.com/airockchip/rknn-llm/f7390530443bf84f0394255a449d7cbe81e69d1c/rkllm-toolkit/packages/rkllm_toolkit-1.3.1-cp312-cp312-linux_x86_64.whl",
+    "size": 7280704,
+    "sha256": "ba4191cd50ec6a555367df3d6a88f5827e918210d2f209a84774301427fa0add"
+  },
+  {
+    "path": "rknn-toolkit2/LICENSE",
+    "name": "rknn-toolkit2-LICENSE",
+    "url": "https://raw.githubusercontent.com/airockchip/rknn-toolkit2/59a913d172e7f5ff03c9076e2ec7b1b1288ffd08/LICENSE",
+    "size": 7639,
+    "sha256": "d005b4a9a787ac1023fc7d353d9f263047e892b4edb9207303915e4a29b93c8e"
+  },
+  {
+    "path": "rknn-llm/LICENSE",
+    "name": "rknn-llm-LICENSE",
+    "url": "https://raw.githubusercontent.com/airockchip/rknn-llm/f7390530443bf84f0394255a449d7cbe81e69d1c/LICENSE",
+    "size": 3310,
+    "sha256": "8d670a646eb8cf28fb7c63a5c9126c224a3a3f8124b00a3b9184df9a2ed298b8"
+  },
+  {
+    "path": "rknpu2/runtime/Linux/librknn_api/include/rknn_api.h",
+    "url": "https://raw.githubusercontent.com/airockchip/rknn-toolkit2/59a913d172e7f5ff03c9076e2ec7b1b1288ffd08/rknpu2/runtime/Linux/librknn_api/include/rknn_api.h",
+    "size": 35707,
+    "sha256": "c48e11a6f41b451a5fd1e4ad774ea60252d3d94f78bee9b21ea3d21b21deba9a"
+  }
+]

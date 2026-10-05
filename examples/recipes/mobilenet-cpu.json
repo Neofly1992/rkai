@@ -1,0 +1,62 @@
+{
+  "schema": "rkai.recipe/v0",
+  "id": "mobilenet",
+  "model": {
+    "id": "verification/mobilenet",
+    "revision": "23a2a25eaaa6fcd61865414c8a1acf13dda66b7a"
+  },
+  "converter": "onnx-import",
+  "inputs": {
+    "model": {
+      "path": "mobilenetv2-12.onnx",
+      "size": 13964571,
+      "sha256": "c0c3f76d93fa3fd6580652a45618618a220fced18babf65774ed169de0432ad5"
+    },
+    "labels": {
+      "path": "labels.txt",
+      "size": 21675,
+      "sha256": "4eb3da435cf544e4a6f390f62c84cb9c9bb68cf8b14e97f8a063452382e5efd2"
+    }
+  },
+  "output_plan": {
+    "id": "cpu",
+    "target": {
+      "os": "darwin",
+      "arch": "aarch64",
+      "accelerator": "cpu"
+    },
+    "capabilities": [
+      {
+        "id": "classification",
+        "version": 1
+      }
+    ],
+    "default_capability": "classification",
+    "adapter": {
+      "id": "image-classification",
+      "api": 1,
+      "config": {
+        "input_name": "input",
+        "labels": "file:labels"
+      }
+    },
+    "components": [
+      {
+        "id": "model",
+        "backend": {
+          "id": "onnxruntime",
+          "api": 1
+        },
+        "compatibility": "onnxruntime/1.23.2/cpu",
+        "files": {
+          "model": "model"
+        },
+        "config": {
+          "memory_bytes": 536870912,
+          "memory_evidence": "conservative CPU verification admission allowance; not measured NPU peak",
+          "context_length": 512
+        }
+      }
+    ]
+  }
+}

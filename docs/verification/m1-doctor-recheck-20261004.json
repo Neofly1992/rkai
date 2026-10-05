@@ -1,0 +1,86 @@
+{
+  "status": "unavailable",
+  "checks": [
+    {
+      "name": "configuration",
+      "status": "pass",
+      "evidence": "Strict config validation succeeded",
+      "impact": "Acquisition configuration is valid",
+      "remedy": "No action",
+      "required": true
+    },
+    {
+      "name": "host",
+      "status": "fail",
+      "evidence": "darwin/arm64",
+      "impact": "RK3588 NPU requires Linux aarch64; acquisition remains usable",
+      "remedy": "Run hardware checks on the target RK3588",
+      "required": true
+    },
+    {
+      "name": "soc",
+      "status": "unknown",
+      "evidence": "Device-tree compatible is not readable",
+      "impact": "Target identity unproven",
+      "remedy": "Check board OS/device tree",
+      "required": true
+    },
+    {
+      "name": "npu_device",
+      "status": "unknown",
+      "evidence": "No positively identified rknpu device node",
+      "impact": "Device permission and discovery",
+      "remedy": "Check BSP driver and user device permissions",
+      "required": true
+    },
+    {
+      "name": "npu_driver",
+      "status": "unknown",
+      "evidence": "No readable driver version",
+      "impact": "Presence/version only; compatibility is separate",
+      "remedy": "Check BSP driver version interfaces",
+      "required": true
+    },
+    {
+      "name": "data_directory",
+      "status": "pass",
+      "evidence": "Writable; 503808000000 bytes free",
+      "impact": "Downloads require sufficient space",
+      "remedy": "No action",
+      "required": true
+    },
+    {
+      "name": "memory",
+      "status": "unknown",
+      "evidence": "MemAvailable unavailable",
+      "impact": "Memory budget unknown",
+      "remedy": "Check target memory availability",
+      "required": false
+    },
+    {
+      "name": "rknn_runtime",
+      "status": "unknown",
+      "evidence": "No explicit runtime path configured",
+      "impact": "Runtime file/ABI unverified",
+      "remedy": "Set runtime_paths to the official installed library",
+      "required": true
+    },
+    {
+      "name": "rkllm_runtime",
+      "status": "unknown",
+      "evidence": "No explicit runtime path configured",
+      "impact": "Runtime file/ABI unverified",
+      "remedy": "Set runtime_paths to the official installed library",
+      "required": true
+    },
+    {
+      "name": "compatibility",
+      "status": "unknown",
+      "evidence": "No hardware-validated compatibility profiles in M1",
+      "impact": "No NPU execution support is claimed",
+      "remedy": "Complete M2 model/runtime/driver validation",
+      "required": true
+    }
+  ],
+  "active_probe": "not_run"
+}
