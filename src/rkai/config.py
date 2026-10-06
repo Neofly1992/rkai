@@ -22,6 +22,30 @@ class Registry(Strict):
         return [public_url(v) for v in values]
 
 
+MIB = 1024 * 1024
+
+
+class HttpLimits(Strict):
+    json_bytes: int = Field(default=16 * MIB, ge=1, le=1024 * MIB)
+    multipart_bytes: int = Field(default=64 * MIB, ge=1, le=4096 * MIB)
+    media_file_bytes: int = Field(default=32 * MIB, ge=1, le=1024 * MIB)
+    metadata_bytes: int = Field(default=MIB, ge=1, le=16 * MIB)
+    media_count: int = Field(default=8, ge=1, le=128)
+
+
+class HttpConfig(Strict):
+    host: Literal["127.0.0.1", "::1"] = "127.0.0.1"
+    port: int = Field(default=8080, ge=1, le=65535)
+    preload: str | None = Field(default=None, min_length=1, max_length=256)
+    queue_capacity: int = Field(default=8, ge=0, le=128)
+    # Includes transport/parsed inputs and output buffers. Reserved at model admission.
+    memory_bytes: int = Field(default=128 * MIB, ge=MIB, le=4096 * MIB)
+    staging_bytes: int = Field(default=256 * MIB, ge=MIB, le=16384 * MIB)
+    request_seconds: float = Field(default=300.0, ge=0.1, le=3600, allow_inf_nan=False)
+    drain_seconds: float = Field(default=10.0, ge=0.1, le=60, allow_inf_nan=False)
+    limits: HttpLimits = Field(default_factory=HttpLimits)
+
+
 class Config(Strict):
     data_dir: str = str(
         Path(os.environ.get("XDG_DATA_HOME", "~/.local/share")).expanduser() / "rkai"
@@ -29,6 +53,7 @@ class Config(Strict):
     default_registry: Name = "hf"
     profile: Literal["release", "debug"] = "release"
     log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] | None = None
+    http: HttpConfig = Field(default_factory=HttpConfig)
     allow_cpu_fallback: bool = False
     memory_budget_mb: int = Field(default=2048, ge=128, le=262144)
     memory_reserve_mb: int = Field(default=256, ge=0, le=262144)

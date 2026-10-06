@@ -72,8 +72,8 @@ def stop(process: subprocess.Popen, grace: float = CANCEL_GRACE_SECONDS):
         process.diagnostics.finish()
 
 
-def handshake(process, sock, timeout):
-    hello = receive(sock, timeout)
+def handshake(process, sock, timeout, cancel=None):
+    hello = receive(sock, timeout, cancel=cancel)
     group = hello.get("worker_group")
     if (hello.get("type"), hello.get("version")) != ("hello", PROTOCOL) or (
         type(group) is not int or group <= 1 or group == process.pid

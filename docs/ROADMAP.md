@@ -1,6 +1,6 @@
 # 路线图
 
-2026-10-05：M1 实现及本地复验已完成，独立审查见 [M1-REVIEW](M1-REVIEW.md)；10-04 公网复验曾通过，10-05 MS 403 复验失败如实保留在 VERIFICATION；用户明确将 RK3588 静态诊断后置，不再阻塞开始 M2，真机证据仍标为未验证。M2 当前注册路径与真实 CPU 模型验证已落地；decision/Jev/Laya 与混合组件编排尚未实现，Linux SDK 实际编译/链接及 RK3588 验收尚未完成；M3 未开始。实际范围见 [M2-STATUS](M2-STATUS.md)。完整验收见 [ACCEPTANCE](ACCEPTANCE.md)。
+2026-10-05：M1 实现及本地复验已完成，独立审查见 [M1-REVIEW](M1-REVIEW.md)；10-04 公网复验曾通过，10-05 MS 403 复验失败如实保留在 VERIFICATION；用户明确将 RK3588 静态诊断后置，不再阻塞开始 M2，真机证据仍标为未验证。M2 当前注册路径与真实 CPU 模型验证已落地；decision/Jev/Laya 与混合组件编排尚未实现，Linux SDK 实际编译/链接及 RK3588 验收尚未完成；M3 本地服务子集已授权实现，HTTP/CPU/SDK/wheel 验证见 M3-STATUS；Linux systemd/真机完整验收未完成。实际范围见 [M2-STATUS](M2-STATUS.md)。完整验收见 [ACCEPTANCE](ACCEPTANCE.md)。
 
 1. **M1 模型获取与诊断**：工程、release/debug、配置、manifest、来源/镜像、可靠获取与安装、删除、静态 doctor。
 2. **M2 转换与本地执行**：真实 SDK 接入、受管工具链、convert/run、会话与 worker、各类模型适配、可控 CPU fallback、真机诊断。

@@ -1,0 +1,34 @@
+[Unit]
+Description=rkai local model service
+After=local-fs.target
+
+[Service]
+Type=simple
+User=rkai
+Group=rkai
+UMask=0077
+ExecStart=/opt/rkai/venv/bin/rkai --config /etc/rkai/config.toml serve
+WorkingDirectory=/var/lib/rkai
+StateDirectory=rkai
+StateDirectoryMode=0700
+CacheDirectory=rkai
+CacheDirectoryMode=0700
+Environment=XDG_CACHE_HOME=/var/cache/rkai
+Environment=PATH=/opt/rkai/venv/bin:/usr/local/bin:/usr/bin:/bin
+StandardOutput=journal
+StandardError=journal
+KillMode=control-group
+TimeoutStopSec=45
+SendSIGKILL=yes
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+# Keep the same UID host-execution lock visible to CLI and other services.
+PrivateTmp=no
+# ProtectSystem=strict would otherwise make the shared host-lock directory read-only.
+ReadWritePaths=/tmp
+
+[Install]
+WantedBy=multi-user.target

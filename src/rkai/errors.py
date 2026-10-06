@@ -12,3 +12,14 @@ class RkaiError(Exception):
         if self.details:
             error["details"] = self.details
         return {"error": error}
+
+
+def database_error(error):
+    import sqlite3
+
+    busy = isinstance(error, sqlite3.OperationalError) and "locked" in str(error).lower()
+    return RkaiError(
+        "busy" if busy else "database_error",
+        "Library database is busy" if busy else "Library database operation failed",
+        4 if busy else 1,
+    )

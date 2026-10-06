@@ -1,6 +1,6 @@
 # 架构草案
 
-状态：2026-10-05：M1 获取和 M2 转换/本地执行已实现，HTTP 仍为 M3 设计。实际范围与硬件缺口见 [M2-STATUS](M2-STATUS.md)。管理层不依赖模型名称或聊天语义。
+状态：2026-10-05：M1 获取和 M2 转换/本地执行已实现，HTTP 子集已授权实现，边界见 M3-STATUS。实际范围与硬件缺口见 [M2-STATUS](M2-STATUS.md)。管理层不依赖模型名称或聊天语义。
 
 ## 0. 工程原则
 
@@ -89,7 +89,7 @@ CPU backend 采用 ONNX Runtime 与 llama.cpp 的相应模型路径；各自使�
 
 ## M1 实现映射
 
-`src/rkai/cli.py` 只解析/展示；`config.py` 管严格 TOML 与优先级；`manifest.py` 为通用校验/闭包/获取方案选择的单一来源；`sources.py` 管来源身份、provider 固定文件和镜像 URL；`files.py` 统一 POSIX 目录描述符与 no-follow 文件访问、移动和清理；`download.py` 管有限传输、验证器与 fsync/SHA256；`storage.py` 管唯一模型库规则、SQLite、lease、安装和恢复；`doctor.py` 区分静态检查、显式隔离动态加载和已安装模型主动 probe；文件检查委托模型库。HTTP 尚未实现。
+`src/rkai/cli.py` 只解析/展示；`config.py` 管严格 TOML 与优先级；`manifest.py` 为通用校验/闭包/获取方案选择的单一来源；`sources.py` 管来源身份、provider 固定文件和镜像 URL；`files.py` 统一 POSIX 目录描述符与 no-follow 文件访问、移动和清理；`download.py` 管有限传输、验证器与 fsync/SHA256；`storage.py` 管唯一模型库规则、SQLite、lease、安装和恢复；`doctor.py` 区分静态检查、显式隔离动态加载和已安装模型主动 probe；文件检查委托模型库。HTTP 入口复用此模型库与 Session。
 
 SQLite schema version=2（从 v1 无损新增 execution_evidence，不重建安装/alias/文件表），WAL/foreign_keys/synchronous=FULL；拒绝未知版本或无版本但有用户表的数据库，不清库。installation 为原始 manifest 摘要与 plan 的身份，保留 model/revision/snapshot；artifacts 维护安装对摘要的引用，blobs 用已校验安装文件建立受管内容复用索引。每任务 tree 与 transfers 分离，发布者文件名不会覆盖续传状态。下载及 blob 的完整摘要校验不持有模型库写锁；操作/安装锁是稳定 inode 的 fail-fast flock，busy 返回 4。提交的目录和 SQLite 不是一个事务，因此计划、目录提交和 alias/完成事务均有重开恢复测试。
 
@@ -120,3 +120,21 @@ SQLite v1→v2 加表迁移保留安装/alias/操作与所有文件；未来未�
 安装/导出提交与 conversion completed 记录位于同一个中断延后区。即使安装成功后出现 KeyboardInterrupt，也使用与恢复相同的 committed_output 证明文件/摘要/登记已完成，再返回 completed/cancellation_deferred；无法证明才标取消，不把已发布结果误报取消。
 
 doctor 显式动态加载复用同一 guardian 与专用 EOF 死亡通知，10 秒加载截止时间或父进程 SIGKILL 均先停止 native 进程组。临时编译的卡死 native constructor 已验证此清理路径；这是宿主进程证据，不是 Rockchip ABI 或 NPU 证据。输出管道由有界 reader 持续排空，避免大量厂商日志堵塞；终态诊断在资源停止后收集，原始日志不保存。
+
+
+## M3 应用所有权与生命周期
+
+service.py 用固定执行线程创建并关闭 Library、Session 与 infer 生成器；SQLite 不关闭线程校验、不交给任意线程池，生成器只由该线程推进和关闭。HTTP 只做 DTO/协议转换，经有界 Job 输出通道收取复制事件。单线程 FIFO 序列化模型请求与切换；Session 仍是执行方案/fallback/native 生命周期的唯一权威。models 查询在短时独立连接的所属线程中完成，遵守模型库 lease 和文件校验。
+
+取消控制只设置 Job 标志并在独立控制线程调用 Session 的锁保护 cancel；控制锁和 native 停止等待不能阻塞 ASGI 事件循环。加载读取也观察取消标志与加载期限，先回收 worker 再报告失败。HTTP 响应迭代器同时监测断连和 send 截止时间，不依赖 ASGI 版本的 send-only 断连机制。停止信号在 Uvicorn 等待连接前停止应用准入；在途取消、排队退出、actor 停止 worker/释放 lease，最后退出。进程停止无法证明时停止准入、保留 owner/lease/预算并重试证明，不宣称资源已释放；systemd cgroup 是外部兜底。
+
+上传解析逐块统计实际字节、metadata/file/total 限额与全局预算；文件操作的取消等待实际文件操作返回，避免清理与线程池写入竞态。私有 http-staging 使用随机身份和 flock owner，正常退出清理，重启只回收可获得 owner lock 的遗留上传，不删除其他进程活动内容或用户模型。数据库 schema 仍为 v2，没有迁移或重建已有安装。
+
+
+2026-10-06 审查修复：Session.cancel 可携带 request_id，锁内核对当前请求，防止共享 context 的迟到取消串扰。
+队列移除与 actor 出队使用同一 mutex；尚未执行的取消可直接完成，已出队的请求仍只由 actor 证明停止。
+JSON/SSE 的 Delivery 持有响应预算到 ASGI 发送退出，并在迭代器尚未启动时也执行清理。
+成功输出按入口绝对期限停止；超时错误诊断只在 native 停止后进行有界写入，发送阻塞则结束连接。
+启动握手、load 写入和 loaded 读取共同观察加载取消/剩余期限，未 loaded 的进程不等待软关闭。
+稳定 http-uploads 注册锁协调 UUID owner 创建、恢复、删除，防止 unlink 后出现两个 flock inode；
+正常清理和恢复回收临时锁，旧孤儿锁只在证明 owner 空闲后删除，不改用户模型或数据库格式。

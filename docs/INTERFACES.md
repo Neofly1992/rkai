@@ -1,6 +1,6 @@
 # 架构草案
 
-状态：2026-10-05：M1 获取和 M2 转换/本地执行已实现，HTTP 仍为 M3 设计。实际范围与硬件缺口见 [M2-STATUS](M2-STATUS.md)。管理层不依赖模型名称或聊天语义。
+状态：2026-10-05：M1 获取和 M2 转换/本地执行已实现，HTTP 子集已授权实现，边界见 M3-STATUS。实际范围与硬件缺口见 [M2-STATUS](M2-STATUS.md)。管理层不依赖模型名称或聊天语义。
 
 ## 0. 工程原则
 
@@ -89,7 +89,7 @@ CPU backend 采用 ONNX Runtime 与 llama.cpp 的相应模型路径；各自使�
 
 ## M1 实现映射
 
-`src/rkai/cli.py` 只解析/展示；`config.py` 管严格 TOML 与优先级；`manifest.py` 为通用校验/闭包/获取方案选择的单一来源；`sources.py` 管来源身份、provider 固定文件和镜像 URL；`files.py` 统一 POSIX 目录描述符与 no-follow 文件访问、移动和清理；`download.py` 管有限传输、验证器与 fsync/SHA256；`storage.py` 管唯一模型库规则、SQLite、lease、安装和恢复；`doctor.py` 区分静态检查、显式隔离动态加载和已安装模型主动 probe；文件检查委托模型库。HTTP 尚未实现。
+`src/rkai/cli.py` 只解析/展示；`config.py` 管严格 TOML 与优先级；`manifest.py` 为通用校验/闭包/获取方案选择的单一来源；`sources.py` 管来源身份、provider 固定文件和镜像 URL；`files.py` 统一 POSIX 目录描述符与 no-follow 文件访问、移动和清理；`download.py` 管有限传输、验证器与 fsync/SHA256；`storage.py` 管唯一模型库规则、SQLite、lease、安装和恢复；`doctor.py` 区分静态检查、显式隔离动态加载和已安装模型主动 probe；文件检查委托模型库。HTTP 入口复用此模型库与 Session。
 
 SQLite schema version=2（从 v1 无损新增 execution_evidence，不重建安装/alias/文件表），WAL/foreign_keys/synchronous=FULL；拒绝未知版本或无版本但有用户表的数据库，不清库。installation 为原始 manifest 摘要与 plan 的身份，保留 model/revision/snapshot；artifacts 维护安装对摘要的引用，blobs 用已校验安装文件建立受管内容复用索引。每任务 tree 与 transfers 分离，发布者文件名不会覆盖续传状态。下载及 blob 的完整摘要校验不持有模型库写锁；操作/安装锁是稳定 inode 的 fail-fast flock，busy 返回 4。提交的目录和 SQLite 不是一个事务，因此计划、目录提交和 alias/完成事务均有重开恢复测试。
 
@@ -128,3 +128,6 @@ error 包含 code/message/exit_code，可附受控 details；failed 请求事件
 图像压缩文件限 16 MiB，worker 解码前限 8 Mi 像素。image_tensor 是执行与 RKNN 图像校准共同的预处理权威；图像内存预算为 native 声明加 adapter 工作区。calibration_dataset 生成按样本分行、按图输入分列的 NPY 数据集，并校验类型、形状与数值；详情见 MANIFEST。
 
 NativeDiagnostics 连续读取两条输出管道，仅暴露固定诊断标签；原始 stdout/stderr 不进入公共 DTO、记录或 debug 日志。SDK 命令错误附阶段、程序名称与退出状态。
+
+
+M3：Service(config) 的执行线程拥有 Library/Session；submit(Job) 只接收已校验能力 DTO，Job.next 为异步有界事件出口，Job.reap 等实际执行停止。具体生命周期见 LIFECYCLE，HTTP wire 契约见 API。

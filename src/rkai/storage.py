@@ -507,6 +507,35 @@ class Library:
                 )
             return {"file_state": state, "execution_validation": row["execution_validation"]}
 
+    def models(self):
+        """Installed aliases with verified files; readiness is separate from execution evidence."""
+        result = []
+        for row in self.db.execute(
+            "SELECT a.name,i.id,i.plan_id FROM aliases a JOIN installations i "
+            "ON a.installation=i.id ORDER BY a.name"
+        ).fetchall():
+            state = self.inspect(row["name"])
+            if state["file_state"] != "ready":
+                continue
+            with self.lease(row["name"]) as identity:
+                if identity != row["id"]:
+                    raise RkaiError("busy", "Alias changed during model listing", 4)
+                manifest = parse(
+                    read_file(
+                        self.root / "installations" / identity / "manifest.json", MAX_MANIFEST_BYTES
+                    )
+                )
+                plan = manifest.select(row["plan_id"], None)
+                result.append(
+                    {
+                        "id": row["name"],
+                        "installation": identity,
+                        "capabilities": [c.id for c in plan.capabilities],
+                        **state,
+                    }
+                )
+        return result
+
     def result(self, operation, saved):
         return {
             "operation_id": operation,

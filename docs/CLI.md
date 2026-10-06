@@ -1,6 +1,6 @@
 # 命令与使用流程规格
 
-状态：2026-10-05：doctor/pull/delete/convert/run/runtime prepare 已实现；serve 仍为 M3 设计。实际命令与支持限制见 [USAGE](USAGE.md)、[M2-STATUS](M2-STATUS.md)。
+状态：2026-10-05：doctor/pull/delete/convert/run/runtime prepare 已实现；serve 已实现（服务身份/systemd 见 SERVICE）。实际命令与支持限制见 [USAGE](USAGE.md)、[M2-STATUS](M2-STATUS.md)。
 
 ## 1. 公共约定
 
@@ -97,10 +97,10 @@ rkai run -m ALIAS --interactive [--allow-cpu-fallback]
 
 CLI 流式输出按能力呈现：chat 增量文本，embedding/classification 输出结构化结果；decision 尚未实现。--json 输出 NDJSON 事件，提示及日志走 stderr。公共事件流不强制叫 token。
 
-## 6. serve（M3 设计）与 delete（已实现）
+## 6. serve 与 delete（已实现）
 
 ```text
-rkai serve [--port PORT] [--preload ALIAS ...]
+rkai serve [--port PORT] [--preload ALIAS]
 rkai delete ALIAS [--purge]
 ```
 
@@ -131,3 +131,10 @@ delete 默认移除 alias；若没有其他 alias/安装引用，再移除不被
 - 全局配置/profile/data-dir/log-level 放在子命令前；--json 同时支持前后。日志只在 stderr，未知配置/字段报错；缺 runtime 路径或未经实测 ABI 如实 unknown。
 
 M2 当前实现的错误对象同时包含 exit_code。run 的 failed 事件与进程退出码一致，worker 内发现的上下文/图像无效输入同样返回 2。SDK/构建失败仅附安全阶段与诊断类别；native 原始 stdout/stderr 不转发到 debug 日志。
+
+## M3 serve 实现
+
+`rkai [--config PATH] [--data-dir PATH] serve [--port PORT] [--preload ALIAS]`。
+服务配置使用严格 [http]/[http.limits]，显式 CLI port/preload 覆盖配置、不回写。
+preload 仅一个 alias（单活跃方案）；不能提供多个模型列表绕过设备锁。
+HTTP 入参、队列/模型状态及协议边界见 API；systemd 分发与身份见 SERVICE。

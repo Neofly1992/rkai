@@ -272,3 +272,112 @@ UV_CACHE_DIR=/tmp/rkai-uv-cache uv run --locked pytest -q tests/test_execution.p
 ## 2026-10-05：提交前检查
 
 用户授权提交当前成果。检查 95 个待纳入版本管理的文件（约 1.19 MB），未发现二进制内容、超大文件、模型权重/动态库/私钥文件或常见凭据模式；git diff --check 通过。依赖环境、缓存、dist 仍由 .gitignore 排除。本轮仅续接文档变化，沿用最近 180 项回归及公开 CPU 实测，不重复声称运行测试；M2 硬件/功能边界不变，M3 未实现。
+
+## 2026-10-05：M3 本地服务与首版交付
+
+用户明确授权 M3，基线 `1572628`，启动工作区干净。实现范围见 [M3-STATUS](M3-STATUS.md)，协议偏差与字段见 [API](API.md)，systemd 使用见 [SERVICE](SERVICE.md)。没有提交、推送、发布、启用本机服务或修改系统驱动；没有更改用户默认模型库。
+
+已实现 FastAPI 前台回环 serve 与六入口，固定线程持有 SQLite/Session/生成器、加载复用/FIFO/模型切换、同 UID 设备锁、类型化协议子集、实际字节/分类媒体/全局预算、上传 owner lock 恢复、断连/deadline/背压/关闭、systemd unit/config 和主 wheel 分发。HTTP 不复制 M1/M2 模型业务，也不隐式 pull/convert/prepare。数据库仍 schema v2，无数据迁移/清库。
+
+最终执行（串行 native 验证，缓存 `/tmp/rkai-uv-cache`）：
+
+```sh
+uv run --locked pytest -q -W error::pytest.PytestUnhandledThreadExceptionWarning
+uv run --locked ruff check src tests scripts
+uv run --locked ruff format --check src tests scripts
+uv build --offline
+uv venv --python 3.12 /tmp/rkai-m3-wheel-env
+uv pip install --offline --reinstall-package rkai --python /tmp/rkai-m3-wheel-env/bin/python dist/rkai-0.1.0-py3-none-any.whl
+uv run --locked python scripts/verify_m3_http.py \
+  --cli /tmp/rkai-m3-wheel-env/bin/rkai \
+  --data-dir /tmp/rkai-m2-final-preparation-library \
+  --image /tmp/rkai-m2-public/mobilenet/space_shuttle_224.jpg \
+  --evidence docs/verification/m3-wheel-http-20261005.json
+```
+
+全量 **203 passed in 23.55s**（原 180 + HTTP 23），Ruff 与 **42 文件**格式通过，sdist/wheel 构建通过，git diff --check 通过。[最终检查与源码摘要](verification/m3-checks-20261005.json)。
+
+| 证据类别 | 实际结果 | 证明边界 |
+| --- | --- | --- |
+| 真实 TCP/SQLite/guardian/native ONNX + 故障注入 | 分类、原生 SSE 单终态/序号、延迟/preload/共享加载/切换、CLI lease、队列上限/忙、deadline、卡死 native 断连和关闭、输出背压、JSON/metadata/单媒体/未知长度超限、上传恢复保留活动 owner、上传中关闭、协议参数拒绝 | 环境定位在测试中复用开发环境；背压缩放队列并延迟真实 ASGI 写入，native 保持真实；不证明 NPU 或公网协议服务 |
+| 真实公开 CPU HTTP/官方 SDK | MobileNet top-1=812、MiniLM 384 维批量 embedding、stories260K OpenAI create/SSE、Anthropic create 和 stream helper 文本累积成功 | 复用此前显式准备的隔离库与固定公开模型，不是本轮重建环境/重新下载；微型续写模型不代表指令聊天质量 |
+| 真信号/执行准入 | SIGTERM 与 SIGINT 均在真实 CPU 文本 delta 之后触发，只一个 cancelled 终态；服务退出，CLI 再准入并推理成功；占用端口退出 4，服务运行期间 CLI busy=4 | 宿主 macOS 进程/回环证据，不是 Linux systemd/cgroup 或 NPU 证据 |
+| 独立主 wheel | Python 3.12.13，只安装 19 个主依赖包；同样实际跑完整 HTTP/SDK/native 流程，release/debug 两种服务启动；主环境无 ORT/torch/llama/官方协议 SDK，native 从受管环境执行；unit/config 打包，无权重/.so/SDK wheel | SDK 验证程序运行于独立的测试环境，服务入口与管理源码来自 wheel；推理厂商环境继续独立，不声称 wheel 内含 NPU SDK |
+| Linux SDK/systemd/RK3588 | **not_run** | 缺 Linux 可用执行宿主/板卡；目标 ABI、链接、驱动、NPU 精度/取消与真实 cgroup 关闭没有证据 |
+
+官方资料核对日期 2026-10-05，来源链接保留在 API。真实验证版本：OpenAI Python **2.54.0**、Anthropic Python **0.125.0**、FastAPI **0.142.2**、Uvicorn **0.54.0**、python-multipart **0.0.32**。没有调用外部付费模型，也没有保存私人输入。OpenAI usage 省略；Anthropic token 计数为 null；未知停止原因映射 null。这些明确偏差已写入规格，SDK 宽松解析通过不意味着完整兼容或可用于 token 计费。
+
+[源码环境公开 HTTP 证据](verification/m3-public-http-20261005.json) 保留公开三模型、信号与准入结果；最后增量协议校验修正后重新构建并安装最终 wheel，完整重跑证据是 [最终独立 wheel HTTP](verification/m3-wheel-http-20261005.json) 和 [wheel 摘要/包边界](verification/m3-wheel-package-20261005.json)。固定模型/toolchain 来源与准备版本继续引用 M2 的 m2-independent-public-cpu-20261005.json，不复制为本次新下载证据。
+
+过程失败如实保留：初次受限沙箱回归 23 failed/157 passed，原因是回环 bind 与 ps 被限制；受批准执行后原 180 项通过。扩展在途关闭测试曾 1 failed/11 passed，复现取消控制等待 Session 锁阻塞事件循环；改为独立控制线程后针对性通过，再全量通过。公开验证先暴露服务重启 TIME_WAIT 绑定问题（增加 SO_REUSEADDR，仍拒绝活动端口）和 SIGINT CLI 退出 130 的校验约定；输出后信号测试另发现原生取消应为 cancelled 而非 failed，已统一终态和 sequence 后两信号通过。最终复核还修复 max_completion_tokens=0 被默认值吞掉、n=true 被 Literal 接受，真实 HTTP 回归拒绝二者。未放宽设备锁、跳过失败或重放输出。
+
+Linux systemd 安装/启动/停止/日志验证命令见 SERVICE；真实 Linux SDK/RK3588 入口见 M2-STATUS。decision/Jev/Laya 和混合组件编排仍未实现；无鉴权本地范围之外的凭据/公网/多用户/新 SoC 未扩张。M1 公网本轮未重跑，历史 MS 403 不改为通过。当前宿主可执行部分已交付，**首版完整目标平台验收仍未完成，人工验收未代签**。
+
+## 2026-10-06：M3 审查问题修复
+
+用户授权修复上一轮只读审查的 8 项问题；在现有 M3 未提交差异上增量修改，保护已有模型/配置/其他工作。没有提交、推送、发布、启用 systemd 或修改驱动。修复范围与复现对应：
+
+| 问题 | 修复与实际验证 |
+| --- | --- |
+| 迟到取消串扰下一请求 | Job 保存 accepted request_id；Session.cancel 在锁内核对目标。真实 HTTP、共享 Session、SIGSTOP/CONT 时序注入：旧取消到达第二请求期间，两个请求均 200，context 复用 |
+| 超时先报告终态、native 仍运行 | Job.next/HTTP 错误终态等待 owner 实际完成。真实卡死 ONNX，在收到唯一 request_timeout 终态时 guardian 已退出，删除 lease 可用 |
+| 非流式发送提前释放预算 | JSON/SSE 共用 Delivery，发送/断连/超时清理结束后释放预算。真实 HTTP 延迟 JSON 发送时 requests=1/memory>0，queue_capacity=0 的第二请求 429 |
+| 输出超过总期限仍成功 | 正常写入使用入口绝对剩余期限与 drain_seconds；JSON 整个发送操作有界，缓冲事件读取也检查期限。真实 HTTP 的非流式阻塞发送/流式慢写均结束连接，不能超期返回完整成功 |
+| 已取消排队请求等前一个请求 | 队列移除和 actor 出队共用 mutex。0.2 秒排队超时及时 504，前一真实 native 仍运行，只有前一上传/预算保留；不退役无关 Session |
+| 握手忽略加载取消/期限 | 握手、load 控制帧、loaded 读取使用同一剩余期限且可取消；未 loaded 直接停止受管进程组。真实延迟 Python/guardian 启动在短期限内 504，进程停止、lease 释放 |
+| 每上传永久积累 UUID 锁 | 一个稳定注册锁协调创建/删除/恢复，临时锁和媒体一起回收。重复成功/拒绝上传后无 UUID 锁遗留；旧孤儿锁被恢复，活动 owner 和非生成文件保留 |
+| sudo uv 安装的 Python 位于被隐藏的 home | SERVICE 显式将受管 CPython 3.12.13 安装至 /opt/rkai/python，并验证服务身份入口；宿主等价 /tmp 前缀安装、venv/CLI/wheel 实测通过。Linux User=rkai/ProtectHome/systemd 执行仍未运行 |
+
+执行（UV_CACHE_DIR=/tmp/rkai-uv-cache；native 验证串行）：
+
+```sh
+uv run --locked pytest -q -W error::pytest.PytestUnhandledThreadExceptionWarning
+uv run --locked ruff check src tests scripts
+uv run --locked ruff format --check src tests scripts
+uv build --offline --out-dir /tmp/rkai-m3-fix-dist
+UV_PYTHON_INSTALL_DIR=/tmp/rkai-m3-fix-python uv python install 3.12.13
+UV_PYTHON_INSTALL_DIR=/tmp/rkai-m3-fix-python uv venv --managed-python --python 3.12.13 /tmp/rkai-m3-fix-wheel-env
+uv pip install --offline --python /tmp/rkai-m3-fix-wheel-env/bin/python /tmp/rkai-m3-fix-dist/rkai-0.1.0-py3-none-any.whl
+uv run --locked python scripts/verify_m3_http.py \
+  --cli /tmp/rkai-m3-fix-wheel-env/bin/rkai \
+  --data-dir /tmp/rkai-m2-final-preparation-library \
+  --image /tmp/rkai-m2-public/mobilenet/space_shuttle_224.jpg \
+  --evidence docs/verification/m3-fix-wheel-http-20261006.json
+```
+
+[最终检查与源码摘要](verification/m3-fix-checks-20261006.json)。完整 **211 passed in 29.44s**（原 203 + 新增 8 项 HTTP）；Ruff、42 个文件格式、git diff --check 与离线 sdist/wheel 通过。前置原 HTTP/执行回归 51 passed。新增回归初次为 1 failed/30 passed：握手取消虽已观察期限，但未加载 worker 仍等待软关闭；增加 loaded 状态，启动/构造中直接停止受管组后针对性通过，再全量通过，没有延长测试期限掩盖问题。
+
+解释器路径验证首次 `uv python install --offline 3.12` 失败：当前所选 3.12.15 在缓存中不存在。随后显式下载与已有验证一致的官方 CPython **3.12.13** 到 /tmp 前缀成功；没有升级主工程或 native 工具链。主 wheel 独立环境仅 19 个主依赖，解释器解析到 /private/tmp/rkai-m3-fix-python，不引用用户 home；CLI/serve 入口通过，wheel 内 unit/config 完整，未包含权重/.so，主环境无 ORT/torch/llama/官方协议 SDK。[包与解释器证据](verification/m3-fix-wheel-package-20261006.json)。
+
+最终独立 wheel 真实公开 CPU/官方 SDK 全流程通过：[HTTP 证据](verification/m3-fix-wheel-http-20261006.json)。MobileNet top-1=812，MiniLM 384 维，OpenAI create/SSE、Anthropic create/stream helper 通过；SIGINT/SIGTERM 在实际输出后均只有一个 cancelled 终态，退出后 CLI 再准入成功。SDK 版本保持 OpenAI 2.54.0、Anthropic 0.125.0。复用此前显式准备的隔离公开模型库，没有重新下载权重或使用默认库。
+
+API/LIFECYCLE 已明确：native 回收与停止证明可以晚于执行期限；仅在证明停止后允许有界发送一个失败诊断，发送阻塞时结束连接，不能继续成功输出或提前释放预算。上传孤儿锁恢复只处理生成 UUID 且 owner 空闲的临时对象，数据库仍 v2，不删除模型或用户文件。
+
+Linux systemd/cgroup、Linux SDK 转换、RK3588 ABI/驱动/NPU 仍 **not_run**；decision/Jev/Laya 与混合组件仍未实现。安装说明的修正和宿主路径验证不能替代 Linux/systemd 或目标平台验收。不代签用户验收。
+
+## 2026-10-06：M3 独立复核
+
+独立阅读产品/实现契约及 HTTP、协议、上传、服务 owner、Session、配置与 systemd 包装。先复跑原基线：**211 passed in 30.04s**，并将 pytest 后台线程异常作为错误处理。
+
+新增真实 HTTP 回归 `test_http_load_timeout_does_not_poison_queued_same_model` 首次失败：首个请求在握手加载期间超时 504，仍有效的同模型排队请求错误收到 503 cancelled。修复 Service._load，仅共享模型/runtime 加载失败，不传播发起 Job 的取消或到期。针对新问题与原加载失败共享测试 **2 passed**；修复后完整 **212 passed in 31.68s**。Ruff、42 文件格式检查、sdist/wheel 构建、git diff --check 均通过。
+
+执行（UV_CACHE_DIR=/tmp/rkai-uv-cache，native 验证串行）：
+
+```sh
+uv run --locked pytest -q tests/test_http.py -k 'load_timeout_does_not or load_failure'
+uv run --locked pytest -q -W error::pytest.PytestUnhandledThreadExceptionWarning
+uv run --locked ruff check src tests scripts
+uv run --locked ruff format --check src tests scripts
+uv build --offline --out-dir /tmp/rkai-m3-independent-dist
+uv venv --python /tmp/rkai-m3-fix-python/cpython-3.12.13-macos-aarch64-none/bin/python3.12 /tmp/rkai-m3-independent-wheel-env
+uv pip install --offline --python /tmp/rkai-m3-independent-wheel-env/bin/python /tmp/rkai-m3-independent-dist/rkai-0.1.0-py3-none-any.whl
+uv run --locked python scripts/verify_m3_http.py \
+  --cli /tmp/rkai-m3-independent-wheel-env/bin/rkai \
+  --data-dir /tmp/rkai-m2-final-preparation-library \
+  --image /tmp/rkai-m2-public/mobilenet/space_shuttle_224.jpg \
+  --evidence docs/verification/m3-independent-wheel-http-20261006.json
+```
+
+独立 wheel 安装 19 个主依赖包，复用此前 /tmp 下的 CPython 3.12.13 和显式准备的隔离公开模型库，没有重新下载模型。实际通过 MobileNet top-1=812、MiniLM 384 维、OpenAI chat/SSE、Anthropic message/stream helper；release/debug 两种启动、服务占用时 CLI 拒绝、输出后 SIGTERM/SIGINT 取消不重放、进程有序退出及退出后 CLI 再准入均通过。[本轮独立 wheel HTTP 证据](verification/m3-independent-wheel-http-20261006.json)。SDK 程序使用开发验证环境，服务及管理代码来自新 wheel，native 使用已有受管环境。
+
+[独立审查结论](M3-INDEPENDENT-REVIEW.md)：修复后未发现其他已复现的 M3 本地服务子集阻塞项。Linux systemd/cgroup、Linux SDK 转换、RK3588/NPU 未运行；decision/Jev/Laya 与混合组件未实现；协议子集偏差不变。不代签用户或目标平台验收，未提交、推送、发布或启用系统服务。

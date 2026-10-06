@@ -1,0 +1,23 @@
+# Use the same explicit identity/data_dir for service and administrative CLI.
+data_dir = "/var/lib/rkai"
+profile = "release"
+allow_cpu_fallback = false
+memory_budget_mb = 2048
+memory_reserve_mb = 256
+
+[http]
+host = "127.0.0.1"
+port = 8080
+# preload = "installed/alias" # At most one active execution plan.
+queue_capacity = 8
+memory_bytes = 134217728
+staging_bytes = 268435456
+request_seconds = 300.0
+drain_seconds = 10.0
+
+[http.limits]
+json_bytes = 16777216
+multipart_bytes = 67108864
+media_file_bytes = 33554432
+metadata_bytes = 1048576
+media_count = 8

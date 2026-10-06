@@ -29,15 +29,20 @@ def encode(message: dict) -> bytes:
     return struct.pack("!I", len(raw)) + raw
 
 
-def send(sock: socket.socket, message: dict):
+def send(sock: socket.socket, message: dict, timeout=IO_TIMEOUT_SECONDS, cancel=None):
     # Nonblocking descriptor is essential: writability does not promise a whole frame fits.
     sock.setblocking(False)
     raw = memoryview(encode(message))
-    deadline = time.monotonic() + IO_TIMEOUT_SECONDS
+    deadline = time.monotonic() + min(IO_TIMEOUT_SECONDS, timeout)
     while raw:
         left = deadline - time.monotonic()
-        if left <= 0 or not select.select([], [sock], [], max(0, left))[1]:
+        if cancel is not None and cancel.is_set():
+            raise RkaiError("cancelled", "Worker load cancelled", 130)
+        if left <= 0:
             raise RkaiError("ipc_timeout", "Worker write deadline exceeded")
+        wait = min(left, 0.1) if cancel is not None else left
+        if not select.select([], [sock], [], wait)[1]:
+            continue
         try:
             count = sock.send(raw)
         except BlockingIOError:
@@ -47,7 +52,7 @@ def send(sock: socket.socket, message: dict):
         raw = raw[count:]
 
 
-def receive(sock: socket.socket, timeout: float = IO_TIMEOUT_SECONDS) -> dict:
+def receive(sock: socket.socket, timeout: float = IO_TIMEOUT_SECONDS, cancel=None) -> dict:
     sock.setblocking(False)
     deadline = time.monotonic() + timeout
 
@@ -55,8 +60,13 @@ def receive(sock: socket.socket, timeout: float = IO_TIMEOUT_SECONDS) -> dict:
         raw = bytearray()
         while len(raw) < size:
             left = deadline - time.monotonic()
-            if left <= 0 or not select.select([sock], [], [], max(0, left))[0]:
+            if cancel is not None and cancel.is_set():
+                raise RkaiError("cancelled", "Worker load cancelled", 130)
+            if left <= 0:
                 raise RkaiError("ipc_timeout", "Worker read deadline exceeded")
+            wait = min(left, 0.1) if cancel is not None else left
+            if not select.select([sock], [], [], wait)[0]:
+                continue
             try:
                 chunk = sock.recv(size - len(raw))
             except BlockingIOError:

@@ -100,7 +100,7 @@ def admit(library, plan, capability, allow_cpu):
                 "NPU device/permissions must pass doctor",
                 3,
             )
-    memory = sum(c.memory_bytes for c in configs)
+    memory = sum(c.memory_bytes for c in configs) + getattr(library, "execution_overhead_bytes", 0)
     if isinstance(cfg, ImageConfig):
         memory += image_workspace_bytes(cfg)
     budget = library.config.memory_budget_mb * MIB
@@ -157,8 +157,27 @@ class EventBuffer:
 
 
 class Session:
-    def __init__(self, library, alias, capability=None, allow_cpu=None):
+    def __init__(
+        self,
+        library,
+        alias,
+        capability=None,
+        allow_cpu=None,
+        *,
+        load_cancel=None,
+        load_timeout=LOAD_TIMEOUT_SECONDS,
+    ):
         self.library = library
+        load_deadline = time.monotonic() + min(LOAD_TIMEOUT_SECONDS, load_timeout)
+
+        def load_remaining():
+            if load_cancel is not None and load_cancel.is_set():
+                raise RkaiError("cancelled", "Worker load cancelled", 130)
+            left = load_deadline - time.monotonic()
+            if left <= 0:
+                raise RkaiError("ipc_timeout", "Worker load deadline exceeded")
+            return left
+
         self.id = uuid.uuid4().hex
         self.stack = ExitStack()
         self.retain_fds = []
@@ -166,6 +185,7 @@ class Session:
         self.sock = None
         self.death_fd = None
         self.closed = False
+        self.loaded = False
         self.active = None
         self.worker_terminal = None
         self.cancel_requested = None
@@ -269,26 +289,30 @@ class Session:
             self.media_root = library.root / "sessions" / self.id
             ensure_directory(self.media_root)
             self.stack.callback(remove_tree, self.media_root)
+            load_remaining()
             self.process, parent, self.death_fd = launch_worker(
                 environment / "bin/python", self.retain_fds
             )
             self.sock = parent
-            handshake(self.process, parent, LOAD_TIMEOUT_SECONDS)
+            handshake(self.process, parent, load_remaining(), cancel=load_cancel)
             backend_ids = {c.backend.id for c in self.plan.components}
             runtime = (
                 environment / "assets/librknnrt.so"
                 if "rknn" in backend_ids
                 else (environment / "assets/librkllmrt.so" if "rkllm" in backend_ids else None)
             )
-            self._send(
+            send(
+                parent,
                 {
                     "type": "load",
                     "root": str(self.root),
                     "plan": self.plan.id,
                     "runtime": str(runtime) if runtime else None,
-                }
+                },
+                timeout=load_remaining(),
+                cancel=load_cancel,
             )
-            loaded = receive(parent, LOAD_TIMEOUT_SECONDS)
+            loaded = receive(parent, load_remaining(), cancel=load_cancel)
             if loaded.get("type") != "loaded":
                 raise RkaiError(
                     "worker_load_failed",
@@ -297,6 +321,7 @@ class Session:
                     details={"worker_code": loaded.get("error", {}).get("code", "unknown")},
                 )
             self.evidence = loaded["evidence"]
+            self.loaded = True
 
             def guardian_exit():
                 self.process.wait()
@@ -311,7 +336,12 @@ class Session:
 
             threading.Thread(target=guardian_exit, daemon=True).start()
         except BaseException:
-            self.close()
+            try:
+                self.close()
+            except RkaiError as cleanup:
+                # An application owner must retain this context when stop cannot be proved.
+                cleanup.session = self
+                raise
             raise
 
     def _send(self, message):
@@ -488,8 +518,10 @@ class Session:
 
                 unlink_file(self.media_root / (request_id + ".image"), missing_ok=True)
 
-    def cancel(self):
+    def cancel(self, request_id=None):
         with self.guard:
+            if request_id is not None and self.active != request_id:
+                return
             request_id = self.active
             if not request_id or self.closed or self.worker_terminal == request_id:
                 return
@@ -519,7 +551,9 @@ class Session:
             if self.closed:
                 return
             if self.process is not None:
-                if self.sock is not None and not self.active:
+                # Before loaded, the worker may be stuck in startup/constructor:
+                # a graceful command cannot prove progress, stop the owned group.
+                if self.loaded and self.sock is not None and not self.active:
                     try:
                         self._send({"type": "shutdown"})
                         self.process.wait(timeout=CANCEL_GRACE_SECONDS)

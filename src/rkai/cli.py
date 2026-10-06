@@ -8,7 +8,7 @@ from pathlib import Path
 
 from .config import load
 from .doctor import configuration_failure, doctor
-from .errors import RkaiError
+from .errors import RkaiError, database_error
 from .storage import Library
 
 
@@ -57,6 +57,9 @@ def parser():
     cpu = run.add_mutually_exclusive_group()
     cpu.add_argument("--allow-cpu-fallback", dest="allow_cpu", action="store_true", default=None)
     cpu.add_argument("--no-cpu-fallback", dest="allow_cpu", action="store_false")
+    service = sub.add_parser("serve", help="Run the loopback HTTP service in the foreground")
+    service.add_argument("--port", type=int)
+    service.add_argument("--preload")
     runtime = sub.add_parser("runtime", help="Explicit preparation of managed runtime environments")
     runtime.add_argument("action", choices=("prepare",))
     runtime.add_argument(
@@ -96,6 +99,21 @@ def main(argv=None):
         logging.getLogger("httpx").setLevel(logging.WARNING)
         logging.getLogger("httpcore").setLevel(logging.WARNING)
         logging.getLogger("rkai").debug("profile=%s command=%s", profile, args.command)
+        if args.command == "serve":
+            from pydantic import ValidationError
+
+            from .config import HttpConfig
+            from .http import serve
+
+            options = config.http.model_dump()
+            for key in ("port", "preload"):
+                if getattr(args, key) is not None:
+                    options[key] = getattr(args, key)
+            try:
+                config.http = HttpConfig.model_validate(options)
+            except ValidationError as error:
+                raise RkaiError("invalid_arguments", "Invalid service options", 2) from error
+            return serve(config)
         if args.command == "doctor":
             result = doctor(config, args.model, args.probe, load_runtime=args.load_runtime)
             exit_code = 3 if result["status"] != "ready" else 0
@@ -157,12 +175,7 @@ def main(argv=None):
         return 130
     except sqlite3.Error as e:
         _diagnostic(e)
-        busy = isinstance(e, sqlite3.OperationalError) and "locked" in str(e).lower()
-        error = RkaiError(
-            "busy" if busy else "database_error",
-            "Library database is busy" if busy else "Library database operation failed",
-            4 if busy else 1,
-        )
+        error = database_error(e)
         print(json.dumps(error.result()), file=sys.stdout if json_output else sys.stderr)
         return error.exit_code
     except (OSError, ValueError) as e:

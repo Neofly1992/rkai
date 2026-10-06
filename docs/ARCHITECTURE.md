@@ -1,6 +1,6 @@
 # 架构草案
 
-状态：2026-10-05：M1 获取和 M2 转换/本地执行已实现，HTTP 仍为 M3 设计。实际范围与硬件缺口见 [M2-STATUS](M2-STATUS.md)。管理层不依赖模型名称或聊天语义。
+状态：2026-10-05：M1 获取和 M2 转换/本地执行已实现，HTTP 子集已授权实现，边界见 M3-STATUS。实际范围与硬件缺口见 [M2-STATUS](M2-STATUS.md)。管理层不依赖模型名称或聊天语义。
 
 ## 0. 工程原则
 
@@ -89,7 +89,7 @@ CPU backend 采用 ONNX Runtime 与 llama.cpp 的相应模型路径；各自使�
 
 ## M1 实现映射
 
-`src/rkai/cli.py` 只解析/展示；`config.py` 管严格 TOML 与优先级；`manifest.py` 为通用校验/闭包/获取方案选择的单一来源；`sources.py` 管来源身份、provider 固定文件和镜像 URL；`files.py` 统一 POSIX 目录描述符与 no-follow 文件访问、移动和清理；`download.py` 管有限传输、验证器与 fsync/SHA256；`storage.py` 管唯一模型库规则、SQLite、lease、安装和恢复；`doctor.py` 区分静态检查、显式隔离动态加载和已安装模型主动 probe；文件检查委托模型库。HTTP 尚未实现。
+`src/rkai/cli.py` 只解析/展示；`config.py` 管严格 TOML 与优先级；`manifest.py` 为通用校验/闭包/获取方案选择的单一来源；`sources.py` 管来源身份、provider 固定文件和镜像 URL；`files.py` 统一 POSIX 目录描述符与 no-follow 文件访问、移动和清理；`download.py` 管有限传输、验证器与 fsync/SHA256；`storage.py` 管唯一模型库规则、SQLite、lease、安装和恢复；`doctor.py` 区分静态检查、显式隔离动态加载和已安装模型主动 probe；文件检查委托模型库。HTTP 复用上述模型库与 Session，入口见 SERVICE。
 
 SQLite schema version=2（从 v1 无损新增 execution_evidence，不重建安装/alias/文件表），WAL/foreign_keys/synchronous=FULL；拒绝未知版本或无版本但有用户表的数据库，不清库。installation 为原始 manifest 摘要与 plan 的身份，保留 model/revision/snapshot；artifacts 维护安装对摘要的引用，blobs 用已校验安装文件建立受管内容复用索引。每任务 tree 与 transfers 分离，发布者文件名不会覆盖续传状态。下载及 blob 的完整摘要校验不持有模型库写锁；操作/安装锁是稳定 inode 的 fail-fast flock，busy 返回 4。提交的目录和 SQLite 不是一个事务，因此计划、目录提交和 alias/完成事务均有重开恢复测试。
 
@@ -100,3 +100,6 @@ SQLite schema version=2（从 v1 无损新增 execution_evidence，不重建安�
 capabilities.py 是能力 DTO 权威；adapters.py 注册预处理/模板/pooling/后处理，backends.py、rknn.py、rkllm.py 拥有 native context。execution.py 拥有唯一静态执行契约（能力/adapter/backend/设备关系，供 doctor/convert/run 共用）、lease、实际方案、准入、session 与有界事件流。worker.py 仅承载 adapter/backend 调用；supervisor.py 用 EOF 专用管道处理父进程死亡，数据仍用 ipc.py 的 socketpair 帧，不引入 transport 框架。processes.py 证明整个受管进程组停止后才能释放。conversion.py 编排配方/源快照/转换记录，environments.py 负责固定版本环境；diagnostics.py 排空厂商输出并只保留安全类别，runtime_check.py 的显式动态加载复用 guardian。安装权威仍在 storage.py。运行与转换复用 manifest/source/下载/文件校验规则。
 
 当前混合 runtime 多环境组件编排不支持；未知支持条件显式失败。Linux SDK/目标 ABI 尚未通过，不能把注册实现写成硬件兼容档案。实际限制见 M2-STATUS。
+
+
+M3 应用层映射：service.py 固定线程持有模型库/Session 与有界 Job；http.py 管 ASGI 输入、断连、响应和 Uvicorn 信号；http_protocol.py 是严格协议子集；http_input.py 管逐块上传与暂存恢复。详细所有权见 LIFECYCLE，支持字段见 API。

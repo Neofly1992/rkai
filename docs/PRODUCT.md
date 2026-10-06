@@ -1,6 +1,6 @@
 # 产品需求
 
-状态：2026-10-05：M1 已实现；用户授权的 M2 已落地当前注册的转换与本地执行路径；decision/Jev/Laya 与混合多组件编排尚未实现。真实 CPU 代表模型和管理层验证见 [M2-STATUS](M2-STATUS.md)。Linux SDK 编译与 RK3588 真机证据未完成，M3 仍为设计。以下需求基线与实际支持范围分开。
+状态：2026-10-05：M1 已实现；用户授权的 M2 已落地当前注册的转换与本地执行路径；decision/Jev/Laya 与混合多组件编排尚未实现。真实 CPU 代表模型和管理层验证见 [M2-STATUS](M2-STATUS.md)。Linux SDK 编译与 RK3588 真机证据未完成，M3 本地服务子集已授权实现（边界见 M3-STATUS）。以下需求基线与实际支持范围分开。
 
 ## 已确认
 
@@ -53,4 +53,4 @@ pull 获取现成产物；convert 获取或读取源模型并生成新产物。p
 
 ## 细化规格入口
 
-命令行为见 [CLI](CLI.md)，模块与能力见 [INTERFACES](INTERFACES.md)，状态和恢复见 [LIFECYCLE](LIFECYCLE.md)，实施与验收见 [ACCEPTANCE](ACCEPTANCE.md)。M1/M2 已明确授权实现，实际代码/验证入口见 USAGE/VERIFICATION；服务保持 M3 设计。
+命令行为见 [CLI](CLI.md)，模块与能力见 [INTERFACES](INTERFACES.md)，状态和恢复见 [LIFECYCLE](LIFECYCLE.md)，实施与验收见 [ACCEPTANCE](ACCEPTANCE.md)。M1/M2 已明确授权实现，实际代码/验证入口见 USAGE/VERIFICATION；服务已实现的子集与验证见 M3-STATUS。

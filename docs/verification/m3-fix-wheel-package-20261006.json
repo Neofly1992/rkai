@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-06",
+  "python": "3.12.13",
+  "python_executable_resolved": "/private/tmp/rkai-m3-fix-python/cpython-3.12.13-macos-aarch64-none/bin/python3.12",
+  "interpreter_outside_user_home": true,
+  "wheel_sha256": "4ed50055344543ef13192c963f6438a30627722400e1a5386304a23d4cbfb402",
+  "packages": {
+    "uvicorn": "0.54.0",
+    "opentelemetry-api": "1.45.0",
+    "click": "8.5.0",
+    "pydantic_core": "2.46.5",
+    "rkai": "0.1.0",
+    "httpcore": "1.0.9",
+    "h11": "0.16.0",
+    "pydantic": "2.13.5",
+    "python-multipart": "0.0.32",
+    "fastapi": "0.142.2",
+    "certifi": "2026.7.22",
+    "annotated-types": "0.8.0",
+    "annotated-doc": "0.0.5",
+    "typing-inspection": "0.4.4",
+    "starlette": "1.7.0",
+    "httpx": "0.28.1",
+    "typing_extensions": "4.16.0",
+    "anyio": "4.15.1",
+    "idna": "3.20"
+  },
+  "packaged_unit_and_config": true,
+  "inference_and_protocol_sdks_in_main_environment": {
+    "onnxruntime": false,
+    "torch": false,
+    "llama_cpp": false,
+    "openai": false,
+    "anthropic": false
+  },
+  "vendor_models_and_dynamic_libraries_in_wheel": [],
+  "linux_systemd": "not_run",
+  "linux_sdk": "not_run",
+  "rk3588_npu": "not_run"
+}

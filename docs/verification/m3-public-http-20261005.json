@@ -1,0 +1,33 @@
+{
+  "device": "cpu",
+  "linux_systemd": "not_run",
+  "npu": "not_run",
+  "sdk": {
+    "openai": "2.54.0",
+    "anthropic": "0.125.0",
+    "fastapi": "0.142.2",
+    "uvicorn": "0.54.0"
+  },
+  "http": {
+    "classification_top1": 812,
+    "embedding_dimension": 384,
+    "openai_chat": "passed",
+    "openai_sse": "passed",
+    "anthropic_message": "passed",
+    "anthropic_sdk_stream_helper": "passed",
+    "cli_device_lock": "passed",
+    "unknown_usage": "null_or_omitted"
+  },
+  "SIGTERM_inflight": "cancelled_after_output_no_replay",
+  "SIGTERM": {
+    "exit_code": -15,
+    "orderly_shutdown": "passed"
+  },
+  "restart": "passed",
+  "SIGINT_inflight": "cancelled_after_output_no_replay",
+  "SIGINT": {
+    "exit_code": 130,
+    "orderly_shutdown": "passed"
+  },
+  "cli_after_shutdown": "passed"
+}

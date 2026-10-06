@@ -20,7 +20,7 @@ Python 支持范围见 pyproject.toml，首个实测基线为 3.12。获取 CLI 
 
 ## 配置
 
-默认读取 `$XDG_CONFIG_HOME/rkai/config.toml`（未设置时 `~/.config/rkai/config.toml`）；模型库默认 `$XDG_DATA_HOME/rkai`（未设置时 `~/.local/share/rkai`）。数据目录和 runtime 路径必须绝对；`--data-dir` 覆盖配置，不回写。服务使用不同身份时将由 M3 显式配置。
+默认读取 `$XDG_CONFIG_HOME/rkai/config.toml`（未设置时 `~/.config/rkai/config.toml`）；模型库默认 `$XDG_DATA_HOME/rkai`（未设置时 `~/.local/share/rkai`）。数据目录和 runtime 路径必须绝对；`--data-dir` 覆盖配置，不回写。服务身份与相同模型库位置必须显式配置，见 SERVICE。
 
 ```toml
 # 将路径替换为自己的绝对目录
@@ -137,3 +137,12 @@ config.toml 可增加 allow_cpu_fallback=false、memory_budget_mb=2048、memory_
 图像文件压缩体积最多 16 MiB，解码前还检查最多 8 Mi 像素。内存准入额外预留两张解码表面及张量工作区，配置预算不足会拒绝加载。RKNN 量化配方的 calibration 是二维样本行；图像直接声明图片 file id，embedding 声明与图输入顺序一致的预分词 NPY。具体格式见 MANIFEST 的转换配方。
 
 请求失败事件包含 error.exit_code；CLI 返回相同分类，输入/上下文超限返回 2。环境准备错误包含失败 stage/program/exit_code 与安全诊断类别，如 missing_module:torch。厂商输出在内存中有界读取，release/debug 都不保存原始 SDK 输出，因此日志不会直接转发路径、URL 或输入内容。
+
+## 本地 HTTP 服务
+
+```sh
+rkai --data-dir /absolute/library serve
+rkai --config /absolute/config.toml serve --preload installed/alias
+```
+
+服务仅回环，前台运行，HTTP 只用本地已安装 alias，CPU 许可取配置。调用样例、systemd 安装/卸载与故障排查见 [SERVICE](SERVICE.md)；字段/错误/SSE/null usage 见 [API](API.md)；实际 CPU/SDK/wheel 与未测平台见 [M3-STATUS](M3-STATUS.md)。
